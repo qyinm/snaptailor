@@ -480,6 +480,15 @@ func TestCLIExport_HelpIsPrimaryAndDocumentsImportAlias(t *testing.T) {
 	if !strings.Contains(stdout, "gandalf apply") {
 		t.Errorf("expected apply contrast in long help, got: %s", stdout)
 	}
+	if !strings.Contains(stdout, "manifest only") {
+		t.Errorf("expected manifest-only scope in long help, got: %s", stdout)
+	}
+	if !strings.Contains(stdout, "Secrets, logins, and agent installs are out of scope") {
+		t.Errorf("expected secrets/login/install out of scope in long help, got: %s", stdout)
+	}
+	if !strings.Contains(stdout, "${ENV}") {
+		t.Errorf("expected ${ENV} filled-on-apply guidance in long help, got: %s", stdout)
+	}
 }
 
 func TestCLIRootHelp_ListsExportNotImportAsPrimary(t *testing.T) {
@@ -543,5 +552,8 @@ func TestCLIImport_HelpResolvesToExport(t *testing.T) {
 	}
 	if !strings.Contains(stdout, "backward-compatible alias") {
 		t.Errorf("import --help should document the alias, got: %s", stdout)
+	}
+	if !strings.Contains(stdout, "manifest only") {
+		t.Errorf("import --help should share export's manifest-only scope, got: %s", stdout)
 	}
 }

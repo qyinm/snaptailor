@@ -31,14 +31,16 @@ func newExportCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "export",
 		Aliases: []string{"import"},
-		Short:   "Export local agent environment to gandalf.toml.",
+		Short:   "Export local agent config to gandalf.toml (manifest only).",
 		Long: `Export scans existing AI agent configurations (Cursor, Claude Code, OpenAI Codex, .mcp.json)
 across your project and local machine to generate a standardized team manifest (gandalf.toml).
 
 By default, export discovers both repository-level and machine-global configurations,
 redacts hardcoded secrets into [env_template], and mirrors team skills into .gandalf/skills/.
 
-Applying a generated manifest onto local agent configs is 'gandalf apply'.
+Export is manifest only (local agent config → gandalf.toml).
+Secrets, logins, and agent installs are out of scope.
+Other machines need 'gandalf apply' (agents already installed; ${ENV} filled there).
 'gandalf import' is a backward-compatible alias for 'gandalf export'.`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			exitCode := runImport(cmd, &flags)

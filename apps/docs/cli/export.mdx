@@ -50,7 +50,7 @@ gandalf import --dry-run
 5. Writes `gandalf.toml` unless `--dry-run` is set. Existing manifests require `--force`.
 
 <Note>
-  Export does not apply the manifest to local agents. Use [`gandalf apply`](/cli/apply) to sync `gandalf.toml` onto local setup, and [`gandalf check`](/cli/check) to detect drift.
+  Export is manifest only (local agent config → `gandalf.toml`). Secrets, logins, and agent installs are out of scope. Other machines need [`gandalf apply`](/cli/apply) (agents already installed; `${ENV}` filled there). Use [`gandalf check`](/cli/check) to detect drift.
 </Note>
 
 ## Related
