@@ -10,7 +10,7 @@ import (
 	"github.com/qyinm/gandalf/internal/gandalfcore/types"
 )
 
-// RunImport launches the interactive import wizard: it scans existing agent
+// RunImport launches the interactive export wizard: it scans existing agent
 // configurations, lets the user toggle which MCP servers and skills to adopt,
 // previews the prospective gandalf.toml with masked secrets, and writes on
 // confirm. Returns a process exit code (0 on success or user cancel).
@@ -24,7 +24,7 @@ func RunImport(runtime types.RuntimeOptions, opts importer.ImportOptions) int {
 
 	final, err := tea.NewProgram(NewImportApp(runtime, opts), tea.WithAltScreen()).Run()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "gandalf import tui failed: %v\n", err)
+		fmt.Fprintf(os.Stderr, "gandalf export tui failed: %v\n", err)
 		return 1
 	}
 
@@ -34,11 +34,11 @@ func RunImport(runtime types.RuntimeOptions, opts importer.ImportOptions) int {
 	}
 	switch {
 	case app.Cancelled():
-		fmt.Fprintln(os.Stdout, "Import cancelled. No files were written.")
+		fmt.Fprintln(os.Stdout, "Export cancelled. No files were written.")
 		return 0
 	case app.Failed():
 		if app.Err() != nil {
-			fmt.Fprintf(os.Stderr, "Import failed: %v\n", app.Err())
+			fmt.Fprintf(os.Stderr, "Export failed: %v\n", app.Err())
 		}
 		return 1
 	}

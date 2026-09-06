@@ -87,6 +87,10 @@ Supported agents share the same safety model around restore:
 
 Before any mutating restore, Gandalf creates a snapshot so you can undo if needed.
 
+## Manifest export
+
+`gandalf export` writes a `gandalf.toml` from discovered local agent configs (project and user-home). That is the local-environment → manifest direction. `gandalf import` is a backward-compatible alias for the same command. Applying a manifest back onto local configs is `gandalf apply`.
+
 ## Out of scope
 
 The following areas are not covered by Gandalf today:

@@ -8,7 +8,7 @@
 The selected product identity for Gandalf. Gandalf is the Infrastructure as Code layer for AI agents: teams declare MCP servers, skills, hooks, and env requirements in `gandalf.toml`, catch configuration drift in CI, apply non-destructively with pre-apply snapshots, and roll back safely. The setup console, snapshot store, and restore trust layer are supporting infrastructure behind this manifest loop.
 
 ### Manifest Loop
-The core product loop and current identity: `gandalf init` -> declare `gandalf.toml` -> `gandalf check --ci` -> `gandalf apply` (snapshot + merge) -> `gandalf restore`. See PLAN.md and PRODUCT.md current contract.
+The core product loop and current identity: `gandalf init` or `gandalf export` -> declare `gandalf.toml` -> `gandalf check --ci` -> `gandalf apply` (snapshot + merge) -> `gandalf restore`. See PLAN.md and PRODUCT.md current contract.
 
 ### Drift
 Any divergence between the team manifest (`gandalf.toml`) and a developer's local agent setup: missing MCP servers, missing or stale skills, absent hooks, or unset required env keys. Drift is detected read-only by `gandalf check` and reported per agent.
@@ -118,6 +118,6 @@ The non-destructive merge algorithm that injects and updates team-declared MCP s
 ### Policy Export
 The planned strategy (PLAN.md M2) of generating vendor-native enforcement artifacts — Claude Code `managed-settings.json`, Codex requirements — from `gandalf.toml`, so Gandalf is the git-reviewable source of policy rather than a competitor to vendor runtime enforcement or MCP gateways.
 
-### Manifest Import
-The reverse-engineering workflow (`gandalf import`) that generates a canonical `gandalf.toml` and mirrors team skills from existing native agent configurations (Cursor `.cursor/mcp.json`, `~/.cursor/mcp.json`, Claude Code `.mcp.json`, `~/.claude.json`, OpenAI Codex `.codex/config.toml`, `~/.codex/config.toml`). Cursor Agent CLI permissions live in `~/.cursor/cli-config.json` and project `.cursor/cli.json` and are discovered by scan/snapshot on the same `cursor` agent; they are not a separate import schema. Import still extracts secrets into `[env_template]` with symlink-safe path confinement and atomic skill rollback.
+### Manifest Export
+The reverse-engineering workflow (`gandalf export`) that generates a canonical `gandalf.toml` and mirrors team skills from existing native agent configurations (Cursor `.cursor/mcp.json`, `~/.cursor/mcp.json`, Claude Code `.mcp.json`, `~/.claude.json`, OpenAI Codex `.codex/config.toml`, `~/.codex/config.toml`). Cursor Agent CLI permissions live in `~/.cursor/cli-config.json` and project `.cursor/cli.json` and are discovered by scan/snapshot on the same `cursor` agent; they are not a separate export schema. Export still extracts secrets into `[env_template]` with symlink-safe path confinement and atomic skill rollback. `gandalf import` is a backward-compatible alias for the same command. Applying the generated manifest onto local agent configs is `gandalf apply`.
 

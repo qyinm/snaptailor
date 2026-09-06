@@ -56,7 +56,7 @@ func TestTier3_Interaction_MultiAgent_Secrets_ProjectOnly(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	stdout, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	stdout, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -154,7 +154,7 @@ env.OPENAI_API_KEY = "sk-proj-0123456789abcdefghijklmnopqrstuvwxyz01"
 		t.Fatal(err)
 	}
 
-	stdout, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--dry-run", "--json")
+	stdout, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--dry-run", "--json")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -218,7 +218,7 @@ func TestTier3_Interaction_ExplicitFrom_Secrets_ForceOverwrite(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--from", customFile, "--force")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--from", customFile, "--force")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -269,7 +269,7 @@ func TestTier3_Interaction_MultiAgent_Skills_ProjectOnly_Force(t *testing.T) {
 	}
 
 	// Run with --force and --project-only
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only", "--force")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only", "--force")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -309,7 +309,7 @@ func TestTier3_Interaction_PrecedenceConflict_DottedNames_JSON(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	stdout, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--json")
+	stdout, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--json")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -343,7 +343,7 @@ func TestTier3_Interaction_CustomOutput_SecretRedaction_DryRun(t *testing.T) {
 	}
 
 	customOutput := "config/nested/team.toml"
-	stdout, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--output", customOutput, "--dry-run")
+	stdout, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--output", customOutput, "--dry-run")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -405,7 +405,7 @@ env.KEY = "sk-proj-storage-secret-key-12345"
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir)
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir)
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}

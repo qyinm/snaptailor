@@ -34,7 +34,7 @@ func TestTier1_ClaudeCode_ProjectMcpJson(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	stdout, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	stdout, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -71,7 +71,7 @@ func TestTier1_ClaudeCode_UserGlobalClaudeJson(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir)
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir)
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -105,7 +105,7 @@ func TestTier1_ClaudeCode_ProjectSectionInUserClaudeJson(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir)
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir)
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -139,7 +139,7 @@ func TestTier1_ClaudeCode_GlobalSettingsJson(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir)
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir)
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -162,7 +162,7 @@ func TestTier1_ClaudeCode_ClaudeSkillsDir(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -195,7 +195,7 @@ func TestTier1_ClaudeCode_DisabledServerPreserved(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -231,7 +231,7 @@ func TestTier1_Cursor_ProjectMcpJson(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -265,7 +265,7 @@ func TestTier1_Cursor_UserGlobalMcpJson(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir)
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir)
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -296,7 +296,7 @@ func TestTier1_Cursor_EnvFileReference(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -332,7 +332,7 @@ func TestTier1_Cursor_CustomAuthStructure(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -368,7 +368,7 @@ func TestTier1_Cursor_CursorSkillsDir(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -400,7 +400,7 @@ args = ["check", "--output-format=json"]
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -432,7 +432,7 @@ args = ["-q"]
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir)
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir)
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -464,7 +464,7 @@ RETRIES = "3"
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -502,7 +502,7 @@ env.HOST = "127.0.0.1"
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -529,7 +529,7 @@ func TestTier1_Codex_CodexSkillsDir(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -557,7 +557,7 @@ func TestTier1_CLIFlags_ProjectOnly(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -580,7 +580,7 @@ func TestTier1_CLIFlags_FromSpecificFile(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--from", customFile)
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--from", customFile)
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -599,7 +599,7 @@ func TestTier1_CLIFlags_DryRun(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	stdout, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--dry-run")
+	stdout, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--dry-run")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -630,7 +630,7 @@ func TestTier1_CLIFlags_ForceOverwrite(t *testing.T) {
 	}
 
 	// Without --force: must fail safely
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir)
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir)
 	if code == 0 {
 		t.Fatalf("expected non-zero exit code when manifest exists without --force")
 	}
@@ -639,7 +639,7 @@ func TestTier1_CLIFlags_ForceOverwrite(t *testing.T) {
 	}
 
 	// With --force: must succeed
-	stdout, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--force")
+	stdout, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--force")
 	if code != 0 {
 		t.Fatalf("expected success with --force, got code %d, stderr: %s", code, stderr)
 	}
@@ -660,7 +660,7 @@ func TestTier1_CLIFlags_JSONOutput(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	stdout, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--json")
+	stdout, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--json")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -688,7 +688,7 @@ func TestTier1_CLIFlags_CustomOutputFile(t *testing.T) {
 	}
 
 	customOut := "custom-manifest.toml"
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--output", customOut)
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--output", customOut)
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -720,7 +720,7 @@ func TestTier1_Templatizer_DatabaseURLs(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -757,7 +757,7 @@ func TestTier1_Templatizer_AnthropicAndOpenAIKeys(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -793,7 +793,7 @@ func TestTier1_Templatizer_GitHubTokens(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -829,7 +829,7 @@ func TestTier1_Templatizer_BearerAndAuthHeaders(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -866,7 +866,7 @@ func TestTier1_Templatizer_FlagCredentials(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -899,7 +899,7 @@ func TestTier1_Templatizer_SafeEnvTemplatePlaceholders(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -938,7 +938,7 @@ func TestTier1_Precedence_ProjectOverridesGlobal(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir)
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir)
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -976,7 +976,7 @@ func TestTier1_Precedence_IdenticalServersAcrossAgents(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -1025,7 +1025,7 @@ command = "python"
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -1056,7 +1056,7 @@ func TestTier1_Precedence_TargetAgentsUnion(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -1094,7 +1094,7 @@ func TestTier1_Precedence_DeterministicSortedOutput(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -1132,7 +1132,7 @@ func TestTier1_Skills_ScanValidSkillMD(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -1163,7 +1163,7 @@ func TestTier1_Skills_IgnoreFoldersWithoutSkillMD(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -1199,7 +1199,7 @@ func TestTier1_Skills_ProjectSkillOverridesGlobalSkill(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--force")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--force")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -1230,7 +1230,7 @@ func TestTier1_Skills_PreserveExecutablePermissions(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -1270,7 +1270,7 @@ func TestTier1_Skills_ForceCleansObsoleteFiles(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only", "--force")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only", "--force")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -1309,5 +1309,28 @@ func TestTier1_Skills_AtomicRollbackOnManifestWriteFailure(t *testing.T) {
 	destSkillDir := filepath.Join(projectPath, ".gandalf", "skills", "rollback-skill")
 	if _, statErr := os.Stat(destSkillDir); !os.IsNotExist(statErr) {
 		t.Errorf("expected newly mirrored skill to be rolled back after failure")
+	}
+}
+
+func TestTier1_ImportAlias_SamePathAsExport(t *testing.T) {
+	t.Parallel()
+	projectPath, homeDir, _ := makeSandbox(t)
+
+	mcpContent := `{"mcpServers": {"alias-tool": {"command": "npx"}}}`
+	if err := os.WriteFile(filepath.Join(projectPath, ".mcp.json"), []byte(mcpContent), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	stdout, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	if code != 0 {
+		t.Fatalf("import alias failed: %d, stderr: %s", code, stderr)
+	}
+	if !strings.Contains(stdout, "Successfully generated gandalf.toml") {
+		t.Errorf("expected success from import alias, got: %s", stdout)
+	}
+
+	m := assertManifestValid(t, projectPath, filepath.Join(projectPath, "gandalf.toml"))
+	if _, exists := m.MCPServers["alias-tool"]; !exists {
+		t.Fatalf("expected alias-tool server from import alias")
 	}
 }

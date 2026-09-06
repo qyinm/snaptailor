@@ -136,7 +136,7 @@ func dirExists(p string) bool {
 }
 
 // syncProjectAgentConfigs aligns project agent configuration files with the canonical manifest.
-// This represents initializing a repository with the imported team manifest so that
+// This represents initializing a repository with the exported team manifest so that
 // native agent files mirror the reconciled manifest.
 func syncProjectAgentConfigs(t *testing.T, projectPath string, m *manifest.Manifest) {
 	t.Helper()

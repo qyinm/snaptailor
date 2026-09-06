@@ -31,7 +31,7 @@ func TestTier2_Boundary_EmptyFiles_EmptyMcpJson(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	stdout, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	stdout, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -60,7 +60,7 @@ func TestTier2_Boundary_EmptyFiles_EmptyCodexToml(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -78,7 +78,7 @@ func TestTier2_Boundary_EmptyFiles_WhitespaceOnlyJson(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir)
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir)
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -103,7 +103,7 @@ func TestTier2_Boundary_EmptyFiles_EmptyMcpServersObject(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -126,7 +126,7 @@ func TestTier2_Boundary_EmptyFiles_EmptySkillsDirectory(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -149,7 +149,7 @@ func TestTier2_Boundary_EmptyFiles_SkillDirWithEmptySkillMD(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -181,7 +181,7 @@ func TestTier2_Boundary_Malformed_SyntaxErrorInJsonWithValidFallback(t *testing.
 		t.Fatal(err)
 	}
 
-	stdout, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	stdout, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import should succeed using remaining valid sources: %d, stderr: %s", code, stderr)
 	}
@@ -212,7 +212,7 @@ func TestTier2_Boundary_Malformed_SyntaxErrorInTomlWithValidFallback(t *testing.
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -230,7 +230,7 @@ func TestTier2_Boundary_Malformed_AllCandidatesMalformed(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code == 0 {
 		t.Fatalf("expected failure when all candidate sources are malformed")
 	}
@@ -248,7 +248,7 @@ func TestTier2_Boundary_Malformed_McpServersNotAnObject(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code == 0 {
 		t.Fatalf("expected non-zero exit code when mcpServers is not an object")
 	}
@@ -273,7 +273,7 @@ func TestTier2_Boundary_Malformed_InvalidArgsTypeInServer(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code == 0 {
 		t.Fatalf("expected non-zero exit code when args has invalid type")
 	}
@@ -309,7 +309,7 @@ func TestTier2_Boundary_Symlinks_DestSkillIsSymlinkOutside(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code == 0 {
 		t.Fatalf("expected failure when destination skill is a symlink")
 	}
@@ -337,7 +337,7 @@ func TestTier2_Boundary_Symlinks_ParentDirIsSymlink(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code == 0 {
 		t.Fatalf("expected failure when parent .gandalf directory is a symlink")
 	}
@@ -361,7 +361,7 @@ func TestTier2_Boundary_Symlinks_OutputFileIsSymlink(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only", "--force")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only", "--force")
 	if code == 0 {
 		t.Fatalf("expected failure when output file is a symlink")
 	}
@@ -387,7 +387,7 @@ func TestTier2_Boundary_Symlinks_SourceSkillIsSymlink(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -414,7 +414,7 @@ func TestTier2_Boundary_Symlinks_ParentDirOfOutputFileIsSymlink(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--output", "sym_dir/manifest.toml")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--output", "sym_dir/manifest.toml")
 	if code == 0 {
 		t.Fatalf("expected error when output parent directory is a symlink")
 	}
@@ -435,7 +435,7 @@ func TestTier2_Boundary_PathTraversal_OutputFileEscapesRoot(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--output", "../escaped.toml")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--output", "../escaped.toml")
 	if code == 0 {
 		t.Fatalf("expected failure for output escaping project root")
 	}
@@ -452,7 +452,7 @@ func TestTier2_Boundary_PathTraversal_DeepTraversalOutputFile(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--output", "nested/sub/../../../../etc/malicious.toml")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--output", "nested/sub/../../../../etc/malicious.toml")
 	if code == 0 {
 		t.Fatalf("expected failure for deep path traversal output")
 	}
@@ -465,7 +465,7 @@ func TestTier2_Boundary_PathTraversal_FromNonExistentTarget(t *testing.T) {
 	t.Parallel()
 	projectPath, homeDir, _ := makeSandbox(t)
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--from", "non_existent_dir/mcp.json")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--from", "non_existent_dir/mcp.json")
 	if code == 0 {
 		t.Fatalf("expected error for non-existent --from path")
 	}
@@ -494,7 +494,7 @@ func TestTier2_Boundary_PathTraversal_EnvFileWithParentTraversal(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -522,7 +522,7 @@ func TestTier2_Boundary_PathTraversal_AbsoluteEnvFileStripped(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -554,7 +554,7 @@ func TestTier2_Boundary_MissingEnvs_UnreferencedVarPreserved(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -592,7 +592,7 @@ func TestTier2_Boundary_MissingEnvs_MultipleSecretsInSingleArg(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -631,7 +631,7 @@ func TestTier2_Boundary_MissingEnvs_ConflictingVarNamesAcrossServers(t *testing.
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -667,7 +667,7 @@ func TestTier2_Boundary_MissingEnvs_DefaultFallbackSyntax(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -722,7 +722,7 @@ func TestTier2_Boundary_Unusual_DottedServerName(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -758,7 +758,7 @@ func TestTier2_Boundary_Unusual_ServerNameWithSpacesAndHyphens(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -798,7 +798,7 @@ func TestTier2_Boundary_Unusual_SpecialCharsInHeaders(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -829,7 +829,7 @@ func TestTier2_Boundary_Unusual_UnicodeInServerDescription(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}
@@ -887,7 +887,7 @@ func TestTier2_Boundary_Unusual_AtSignAndHyphensInServerName(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s", code, stderr)
 	}

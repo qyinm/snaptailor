@@ -42,6 +42,7 @@
         "docs/cli/apply",
         "docs/cli/check",
         "docs/cli/init",
+        "docs/cli/export",
         "docs/cli/restore",
         "docs/cli/snapshot"
       ]

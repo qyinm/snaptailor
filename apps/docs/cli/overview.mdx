@@ -14,6 +14,7 @@ This page lists every top-level command, the common flags available on most comm
 | --- | --- |
 | `gandalf` or `gandalf tui` | Open the interactive setup console (see below). |
 | `gandalf init` | Create `gandalf.toml` and `.gandalf/skills/` in the project. |
+| `gandalf export` | Write `gandalf.toml` from existing local agent configs. `gandalf import` is a backward-compatible alias. |
 | `gandalf scan` | Read-only discovery of local agent configuration. |
 | `gandalf check` | Detect drift between `gandalf.toml` and the local setup. |
 | `gandalf apply` | Sync a team manifest to the local agent setup. |
@@ -105,6 +106,10 @@ Most `gandalf` commands accept the following flags, and some accept additional c
 
   <Card title="init" href="/cli/init">
     Initialize a project
+  </Card>
+
+  <Card title="export" href="/cli/export">
+    Export local setup to a manifest
   </Card>
 
   <Card title="check" href="/cli/check">

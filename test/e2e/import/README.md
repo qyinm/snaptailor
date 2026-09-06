@@ -1,8 +1,9 @@
-# `gandalf import` E2E Test Suite
+# `gandalf export` E2E Test Suite
 
-Opaque-box, requirement-driven E2E suite for the `gandalf import` subsystem
+Opaque-box, requirement-driven E2E suite for the `gandalf export` subsystem
 (multi-agent detection, secret templatization, precedence reconciliation,
-safe CLI modes, interactive TUI wizard).
+safe CLI modes, interactive TUI wizard). `gandalf import` is a backward-compatible
+alias for the same command path.
 
 ## Layout
 
@@ -32,8 +33,9 @@ go test -v -count=1 -run "TestTier4" ./test/e2e/import/...
 - Tests are hermetic: every test builds its own project/home sandbox via
   `t.TempDir()` and never touches the real `$HOME`.
 - Tests exercise the CLI (`runCLI`) and public importer API only; no coupling
-  to private implementation details.
+  to private implementation details. CLI tests use `export` as the primary
+  command name; a dedicated alias case covers `import`.
 - The InSync assertion intentionally runs after `syncProjectAgentConfigs`:
-  import produces the canonical manifest, and aligning project agent files
+  export produces the canonical manifest, and aligning project agent files
   (what `gandalf apply` does for local setups) is what brings the repository
   to `InSync = true`.

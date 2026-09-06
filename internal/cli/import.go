@@ -25,17 +25,21 @@ type importFlags struct {
 	Interactive bool
 }
 
-func newImportCmd() *cobra.Command {
+func newExportCmd() *cobra.Command {
 	var flags importFlags
 
 	cmd := &cobra.Command{
-		Use:   "import",
-		Short: "Reverse-generate gandalf.toml from existing agent configurations.",
-		Long: `Import scans existing AI agent configurations (Cursor, Claude Code, OpenAI Codex, .mcp.json)
+		Use:     "export",
+		Aliases: []string{"import"},
+		Short:   "Export local agent environment to gandalf.toml.",
+		Long: `Export scans existing AI agent configurations (Cursor, Claude Code, OpenAI Codex, .mcp.json)
 across your project and local machine to generate a standardized team manifest (gandalf.toml).
 
-By default, import discovers both repository-level and machine-global configurations,
-redacts hardcoded secrets into [env_template], and mirrors team skills into .gandalf/skills/.`,
+By default, export discovers both repository-level and machine-global configurations,
+redacts hardcoded secrets into [env_template], and mirrors team skills into .gandalf/skills/.
+
+Applying a generated manifest onto local agent configs is 'gandalf apply'.
+'gandalf import' is a backward-compatible alias for 'gandalf export'.`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			exitCode := runImport(cmd, &flags)
 			if exitCode != 0 {
@@ -47,7 +51,7 @@ redacts hardcoded secrets into [env_template], and mirrors team skills into .gan
 
 	flags.bindFlags(cmd.Flags())
 	cmd.Flags().BoolVar(&flags.ProjectOnly, "project-only", false, "Restrict scan to repository files only (ignore user home directory)")
-	cmd.Flags().StringVar(&flags.From, "from", "", "Import strictly from a specific configuration file or directory")
+	cmd.Flags().StringVar(&flags.From, "from", "", "Export strictly from a specific configuration file or directory")
 	cmd.Flags().BoolVar(&flags.DryRun, "dry-run", false, "Preview generated gandalf.toml without writing to disk")
 	cmd.Flags().BoolVarP(&flags.Force, "force", "f", false, "Overwrite existing gandalf.toml if present")
 	cmd.Flags().StringVarP(&flags.Output, "output", "o", "gandalf.toml", "Output manifest file path")
@@ -133,7 +137,7 @@ func runImport(cmd *cobra.Command, flags *importFlags) int {
 	}
 
 	if len(res.Warnings) > 0 {
-		_, _ = fmt.Fprintln(out, "⚠️ Warnings encountered during import:")
+		_, _ = fmt.Fprintln(out, "⚠️ Warnings encountered during export:")
 		for _, w := range res.Warnings {
 			_, _ = fmt.Fprintf(out, "  - %s\n", w)
 		}

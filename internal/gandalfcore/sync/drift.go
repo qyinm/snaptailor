@@ -390,7 +390,7 @@ func compareProjectServers(report *DriftReport, targetFile string, expectedServe
 				Name:        srvName,
 				TargetFile:  targetFile,
 				Description: fmt.Sprintf("Unmanaged MCP server '%s' in project '%s' is not declared in gandalf.toml", srvName, targetFile),
-				Details:     "Project file contains extra MCP servers not tracked by team manifest (run 'gandalf apply --project-only' to drop them, or 'gandalf import' to add them)",
+				Details:     "Project file contains extra MCP servers not tracked by team manifest (run 'gandalf apply --project-only' to drop them, or 'gandalf export' to add them)",
 			})
 		}
 	}
