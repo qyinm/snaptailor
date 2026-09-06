@@ -465,13 +465,13 @@ func TestCLIExport_HelpIsPrimaryAndDocumentsImportAlias(t *testing.T) {
 	if code != 0 {
 		t.Fatalf("expected exit code 0, got %d. Stderr: %s", code, stderr)
 	}
-	if !strings.Contains(stdout, "Export local agent environment to gandalf.toml.") {
-		t.Errorf("expected export short help, got: %s", stdout)
+	if !strings.Contains(stdout, "Export scans existing AI agent configurations") {
+		t.Errorf("expected export long help, got: %s", stdout)
 	}
 	if !strings.Contains(stdout, "gandalf export") {
 		t.Errorf("expected primary usage gandalf export, got: %s", stdout)
 	}
-	if !strings.Contains(stdout, "import") {
+	if !strings.Contains(stdout, "Aliases:") || !strings.Contains(stdout, "import") {
 		t.Errorf("expected import alias documented in export help, got: %s", stdout)
 	}
 	if !strings.Contains(stdout, "backward-compatible alias") {
