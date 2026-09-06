@@ -4,7 +4,7 @@ sidebarTitle: "overview"
 description: "Overview of all gandalf subcommands, common flags, and the TUI entry point. Use this page as your map to the complete local AI agent control console."
 ---
 
-Gandalf is a Go CLI and Bubble Tea TUI that acts as a local control console for AI agent setup across Codex and Claude Code. It inspects installed skills, hooks, MCP servers, and plugins, browses agent-native marketplace and source entries, and applies only reviewed provider-backed changes.
+Gandalf is a Go CLI and Bubble Tea TUI that acts as a local control console for AI agent setup across Codex, Claude Code, and Cursor. It inspects installed skills, hooks, MCP servers, and plugins, browses agent-native marketplace and source entries, and applies only reviewed provider-backed changes.
 
 This page lists every top-level command, the common flags available on most commands, and how to open the interactive setup console.
 
@@ -64,7 +64,7 @@ Most `gandalf` commands accept the following flags, and some accept additional c
 | `-p`, `--project` | Project path | `.` |
 | `--home` | Home directory path | `$HOME` |
 | `--store` | Gandalf data directory | `~/.gandalf` (or `$GANDALF_STORE`) |
-| `--agent` | Target agent (`codex`, `claude-code`) | (none) |
+| `--agent` | Target agent (`codex`, `claude-code`, `cursor`) | (none) |
 | `--scope` | Scope (`user`, `project`, `managed`, `unknown`) | (none) |
 | `--json` | Emit output as JSON | (disabled) |
 

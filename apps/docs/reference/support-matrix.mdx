@@ -1,48 +1,70 @@
 ---
 title: "Gandalf agent support matrix and boundaries"
 sidebarTitle: "Support Matrix"
-description: "Current Gandalf capabilities per agent, including discovery, marketplace browsing, provider-backed actions, and safety features for Codex and Claude Code."
+description: "Current Gandalf capabilities per agent, including discovery, project-only check/apply, marketplace browsing, provider-backed actions, and restore safety for Codex, Claude Code, and Cursor."
 ---
 
-Gandalf supports two agents today: Codex and Claude Code. Each agent exposes a different set of directories, files, and marketplace integrations, so not every operation behaves the same across both. This page maps what Gandalf can discover, browse, modify, and restore for each agent, and where the boundaries are.
+Gandalf supports three agents today: Codex, Claude Code, and Cursor. Each agent exposes a different set of directories, files, and marketplace integrations, so not every operation behaves the same across all three. This page maps what Gandalf can discover, check, apply, browse, modify, and restore for each agent, and where the boundaries are.
 
 ## Capability matrix
 
-| Capability | Codex | Claude Code | Boundary |
-| --- | --- | --- | --- |
-| Discovery and inventory | Reads `~/.codex/config.toml`, user hooks, user skills, and managed plugin skill inventory | Reads `~/.claude/settings.json`, skills, hooks, and marketplace source metadata; other agent directories are observe-only | User-global scope only; project-local files are not inspected |
-| Marketplace/source browsing | Browses and inspects source-backed entries where discovered | Browses and inspects source-backed entries where discovered | Gandalf does not own or certify catalogs |
-| Provider-backed actions | Available only where a concrete action provider can preview and execute | Available only where a concrete action provider can preview and execute | Unavailable actions must show reasons |
-| Marketplace-originated Review Action | Offers non-mutating setup guidance where source metadata is sufficient | Offers reviewed install for eligible user-scope marketplace plugins with verified rollback | Update, uninstall, add/remove-source remain unavailable without mutation providers |
-| Review Changes and restore safety | Supports content-backed snapshot, dry-run restore, apply with explicit flags, rollback where supported | Supports content-backed snapshot, dry-run restore, apply with explicit flags, rollback where supported | Full restore requires `--apply` and `--experimental` or `GANDALF_EXPERIMENTAL=1` |
+| Capability | Codex | Claude Code | Cursor | Boundary |
+| --- | --- | --- | --- | --- |
+| Discovery and inventory | Reads `~/.codex/config.toml`, user hooks, user skills, and managed plugin skill inventory; also discovers project `.codex/config.toml` and `AGENTS.md` | Reads `~/.claude/settings.json`, skills, hooks, and marketplace source metadata; also discovers project `.mcp.json`, `.claude/settings.json`, and `CLAUDE.md` | Reads editor-shared `.cursor/` MCP, skills, and hooks (user and project) plus Cursor Agent CLI config (`~/.cursor/cli-config.json`, project `.cursor/cli.json`) | Scan is read-only. TUI inventory rows stay user-global or managed; project evidence feeds `scan`, `check`, and `apply` |
+| Project-only check/apply | Compares and reconciles `.codex/config.toml` | Compares and reconciles `.mcp.json` | Compares and reconciles `.cursor/mcp.json` | Opt-in via `--project-only`. Pair check and apply on the same files. Keeps `${ENV}` uninterpolated. Default apply still writes user-home only |
+| Manifest apply (user-home) | Smart Merge `~/.codex/config.toml` and copy team skills to `~/.codex/skills/` | Smart Merge `~/.claude/settings.json` and copy team skills to `~/.claude/skills/` | Smart Merge `~/.cursor/mcp.json` and copy team skills to `~/.cursor/skills/` | Preserves personal keys and servers. Does not write repository files unless `--project-only` |
+| Marketplace/source browsing | Browses and inspects source-backed entries where discovered | Browses and inspects source-backed entries where discovered | No Cursor marketplace catalog; source-backed entries appear only if discovered | Gandalf does not own or certify catalogs |
+| Provider-backed actions | Available only where a concrete action provider can preview and execute | Available only where a concrete action provider can preview and execute | Same rule; Cursor has no marketplace install provider | Unavailable actions must show reasons. TUI mutations stay user-global |
+| Marketplace-originated Review Action | Offers non-mutating setup guidance where source metadata is sufficient | Offers reviewed install for eligible user-scope marketplace plugins with verified rollback | No Cursor marketplace install path | Update, uninstall, add/remove-source remain unavailable without mutation providers |
+| Review Changes and restore safety | Supports content-backed snapshot, dry-run restore, apply with explicit flags, rollback where supported | Supports content-backed snapshot, dry-run restore, apply with explicit flags, rollback where supported | Content-backed user snapshots for `~/.cursor/` (and `~/.agents/` compatibility roots). `--project-only` apply also snapshots project MCP files | Full restore requires `--apply` and `--experimental` or `GANDALF_EXPERIMENTAL=1`. Cursor team/cloud hooks are unsupported |
 
 ## Discovery and inventory
 
-Gandalf inspects user-global directories for each agent. For Codex, it reads:
+Gandalf inspects user-global directories and agent-native project files for each supported agent. For Codex, it reads:
 
 - `~/.codex/config.toml` for agent-level settings
 - User hooks and skills
 - Managed plugin skill inventory
+- Project `.codex/config.toml` and `AGENTS.md` when present
 
 For Claude Code, it reads:
 
 - `~/.claude/settings.json`
 - Skills and hooks
 - Marketplace source metadata
+- Project `.mcp.json`, `.claude/settings.json`, and `CLAUDE.md` when present
+
+For Cursor, it reads:
+
+- User `~/.cursor/mcp.json`, `~/.cursor/hooks.json`, and `~/.cursor/skills/`
+- Project `.cursor/mcp.json`, `.cursor/hooks.json`, and `.cursor/skills/`
+- Cursor Agent CLI config: user `~/.cursor/cli-config.json` and project `.cursor/cli.json` (scan/snapshot on the same `cursor` agent; not a separate import schema)
+- Compatibility skill roots such as `.agents/skills/` where Cursor would load them
 
 <Note>
-  Gandalf treats unsupported agent directories as observe-only. It will read and report their state, but does not offer provider-backed actions for agents outside the `codex` and `claude-code` support matrix.
+  The Setup Console inventory shows user-global and managed rows. Project-local evidence is still discovered by `gandalf scan` and used by `gandalf check` / `gandalf apply`. Gandalf does not offer provider-backed TUI mutations for project-local rows, OpenCode, or Pi Agent.
 </Note>
+
+## Project-only check and apply
+
+`gandalf check --project-only` (and the packaged GitHub Action) compare `gandalf.toml` with committed repository agent files, not user-home configs:
+
+- Claude Code: `.mcp.json`
+- Cursor: `.cursor/mcp.json`
+- Codex: `.codex/config.toml`
+- Declared skill sources and `[env_template]` keys referenced by MCP servers
+
+`gandalf apply --project-only` writes those same MCP files. It reconciles undeclared project servers so the CI check can pass, re-reads disk at apply time after Review Changes, and leaves `${ENV}` templates uninterpolated. Default `gandalf apply` remains user-home Smart Merge and still preserves personal servers.
 
 ## Marketplace browsing
 
-Both agents can browse and inspect source-backed marketplace entries that Gandalf discovers in the agent directories. Gandalf presents these entries as they are defined by the source, so you can view descriptions, versions, and configuration details before deciding whether to apply any changes.
+Codex and Claude Code can browse and inspect source-backed marketplace entries that Gandalf discovers in the agent directories. Gandalf presents these entries as they are defined by the source, so you can view descriptions, versions, and configuration details before deciding whether to apply any changes.
 
 Gandalf does not own or certify the catalogs it browses. It surfaces what it finds in the agent directories, and any action that changes your setup is gated by Review Changes.
 
 ## Provider-backed actions
 
-A Provider-backed action is only available when Gandalf has a concrete provider that can preview what will change and execute it safely. If an action does not have a provider, Gandalf shows the reason it is unavailable rather than silently skipping it. This applies equally to Codex and Claude Code.
+A Provider-backed action is only available when Gandalf has a concrete provider that can preview what will change and execute it safely. If an action does not have a provider, Gandalf shows the reason it is unavailable rather than silently skipping it. This applies to Codex, Claude Code, and Cursor.
 
 ## Marketplace-originated Review Action
 
@@ -50,14 +72,15 @@ Codex and Claude Code handle marketplace actions differently today:
 
 - **Codex:** Gandalf offers non-mutating setup guidance for marketplace plugins when the source metadata is sufficient to render a preview. This lets you see what a plugin would configure without applying changes.
 - **Claude Code:** For eligible user-scope marketplace plugins, Gandalf offers reviewed install with verified rollback. Review Changes runs before the install proceeds, so you can inspect the impact.
+- **Cursor:** There is no Cursor marketplace install provider.
 
-For both agents, marketplace updates, uninstalls, and add/remove-source operations remain unavailable when a mutation provider does not exist.
+For all agents, marketplace updates, uninstalls, and add/remove-source operations remain unavailable when a mutation provider does not exist.
 
 ## Review Changes and restore safety
 
-Both agents support the same safety model around restore:
+Supported agents share the same safety model around restore:
 
-- **Content-backed snapshot:** Requires `--agent codex --scope user` or `--agent claude-code --scope user`. Otherwise, create a metadata-only snapshot.
+- **Content-backed snapshot:** Requires `--agent <codex|claude-code|cursor> --scope user`. Otherwise, create a metadata-only snapshot. `--project-only` apply also captures the project MCP files it writes.
 - **Dry-run restore:** The default restore mode previews changes without writing them.
 - **Apply restore:** Requires `--apply`, plus `--experimental` or `GANDALF_EXPERIMENTAL=1`.
 - **Rollback:** Supported where the provider offers verified rollback.
@@ -68,8 +91,12 @@ Before any mutating restore, Gandalf creates a snapshot so you can undo if neede
 
 The following areas are not covered by Gandalf today:
 
-- Project-local files, including `.mcp.json`, project `AGENTS.md`, and `.env`
-- Cursor, OpenCode, and Pi Agent legacy scanners (not active)
+- OpenCode and Pi Agent (legacy scanners are not on the default product path)
+- Cursor team/cloud-distributed hooks (reported as a local blind spot)
+- Provider-backed TUI mutations of project-local rows
+- Managing project `.env` files as a secret store
+- Cursor marketplace install, update, or uninstall
+- Default `gandalf apply` writing repository files (use `--project-only`)
 
 ## Future direction
 

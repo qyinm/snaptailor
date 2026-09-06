@@ -49,7 +49,7 @@ Commit your team requirements to Git:
 ```toml
 # gandalf.toml (team agent environment specification)
 version = "1.0"
-agents  = ["claude-code", "codex"]
+agents  = ["claude-code", "codex", "cursor"]
 
 [mcp_servers.postgres-db]
 command      = "npx"
@@ -108,8 +108,8 @@ go install github.com/qyinm/gandalf/cmd/gandalf@latest
 | Command | Description |
 | :--- | :--- |
 | `gandalf init` | Initialize a starter `gandalf.toml` in the current repository. |
-| `gandalf check [--ci]` | Check for drift between `gandalf.toml` and local agent setups. Exits with code 1 if drift detected in `--ci` mode. |
-| `gandalf apply [--dry-run]` | Non-destructively merge team manifest into local agent environments with pre-apply snapshot backup. |
+| `gandalf check [--ci]` | Check for drift between `gandalf.toml` and local agent setups. `--project-only` compares repository MCP files. Exits with code 1 if drift detected in `--ci` mode. |
+| `gandalf apply [--dry-run]` | Non-destructively merge team manifest into local agent environments with pre-apply snapshot backup. `--project-only` writes repository MCP files instead of user-home. |
 | `gandalf restore --snapshot <id> --apply` | Instantly roll back agent configurations to a previous safety snapshot. |
 | `gandalf snapshot list` | List available pre-apply and manual safety snapshots. |
 | `gandalf` | Launch the interactive Bubble Tea TUI control console. |
@@ -120,9 +120,12 @@ go install github.com/qyinm/gandalf/cmd/gandalf@latest
 
 | Agent | Target Config Files | MCP Support | Skills Support | Guardrail Hooks |
 | :--- | :--- | :---: | :---: | :---: |
-| **Claude Code** | `~/.claude/settings.json`, `~/.claude/skills/` | ✅ Smart Merge | ✅ Markdown/Dir | ✅ Allowed Tools |
+| **Claude Code** | `~/.claude/settings.json`, `~/.claude/skills/`, project `.mcp.json` | ✅ Smart Merge | ✅ Markdown/Dir | ✅ Allowed Tools |
 | **OpenAI Codex** | `~/.codex/config.toml`, `.codex/` | ✅ Smart Merge | ✅ Skill repo | ✅ Pre-save Hooks |
+| **Cursor** | `.cursor/mcp.json`, `~/.cursor/mcp.json`, `.cursor/cli.json`, `~/.cursor/cli-config.json`, `.cursor/skills/`, `~/.cursor/skills/` | ✅ Smart Merge | ✅ Markdown/Dir | ✅ Hooks scan |
 | **Custom / Team Agents** | `.gandalf/skills/`, `.gandalf/hooks/` | ✅ Extensible | ✅ Versioned | ✅ Git-tracked |
+
+Default `gandalf apply` Smart-Merges user-home configs. `gandalf check --project-only` / `gandalf apply --project-only` compare and reconcile repository MCP files (`.mcp.json`, `.cursor/mcp.json`, `.codex/config.toml`). See the [support matrix](apps/docs/reference/support-matrix.mdx) for exact scan, check, apply, and restore boundaries.
 
 ---
 

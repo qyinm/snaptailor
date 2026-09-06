@@ -23,7 +23,7 @@ name = "my-team"
 description = "Shared setup for backend squad"
 
 # Required: list of agents this manifest targets
-agents = ["claude-code", "codex"]
+agents = ["claude-code", "codex", "cursor"]
 ```
 
 | Field | Type | Required | Description |
@@ -31,7 +31,7 @@ agents = ["claude-code", "codex"]
 | `version` | string | Yes | Manifest schema version. Must be `"1.0"`. |
 | `name` | string | Yes | Name of the team or project. Used in snapshot and report names. |
 | `description` | string | No | Human-readable summary of the manifest purpose. |
-| `agents` | array of strings | Yes | Agent IDs to target. Valid values: `codex`, `claude-code`. |
+| `agents` | array of strings | Yes | Agent IDs to target. Valid values: `codex`, `claude-code`, `cursor`. |
 
 ## MCP servers
 
@@ -120,8 +120,8 @@ Each key is the environment variable name, and each value is an example default.
 
 version = "1.0"
 name = "backend-squad"
-description = "Shared Codex and Claude Code setup for backend engineers"
-agents = ["claude-code", "codex"]
+description = "Shared Codex, Claude Code, and Cursor setup for backend engineers"
+agents = ["claude-code", "codex", "cursor"]
 
 [mcp_servers.filesystem]
 command = "npx"
@@ -183,7 +183,7 @@ name = "my-team"
 description = "Shared setup for backend squad"
 
 # Required: list of agents this manifest targets
-agents = ["claude-code", "codex"]
+agents = ["claude-code", "codex", "cursor"]
 ```
 
 | Field | Type | Required | Description |
@@ -191,7 +191,7 @@ agents = ["claude-code", "codex"]
 | `version` | string | Yes | Manifest schema version. Must be `"1.0"`. |
 | `name` | string | Yes | Name of the team or project. Used in snapshot and report names. |
 | `description` | string | No | Human-readable summary of the manifest purpose. |
-| `agents` | array of strings | Yes | Agent IDs to target. Valid values: `codex`, `claude-code`. |
+| `agents` | array of strings | Yes | Agent IDs to target. Valid values: `codex`, `claude-code`, `cursor`. |
 
 ## MCP servers
 
@@ -280,8 +280,8 @@ Each key is the environment variable name, and each value is an example default.
 
 version = "1.0"
 name = "backend-squad"
-description = "Shared Codex and Claude Code setup for backend engineers"
-agents = ["claude-code", "codex"]
+description = "Shared Codex, Claude Code, and Cursor setup for backend engineers"
+agents = ["claude-code", "codex", "cursor"]
 
 [mcp_servers.filesystem]
 command = "npx"
