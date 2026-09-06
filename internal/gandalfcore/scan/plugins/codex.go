@@ -40,6 +40,7 @@ func (CodexScanner) Description() string {
 func (CodexScanner) Targets(projectPath, homeDir string) []scan.ScanTarget {
 	return []scan.ScanTarget{
 		scan.ProjectTarget(projectPath, "AGENTS.md", types.AgentCodex, types.KindAgentInstruction, types.ParserMarkdown, scan.ScanTargetOverrides{}),
+		scan.ProjectTarget(projectPath, ".codex/config.toml", types.AgentCodex, types.KindAgentConfig, types.ParserToml, scan.ScanTargetOverrides{}),
 		scan.HomeTarget(homeDir, ".codex/config.toml", types.AgentCodex, types.KindAgentConfig, types.ParserToml, scan.ScanTargetOverrides{}),
 	}
 }

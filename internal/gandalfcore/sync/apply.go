@@ -32,24 +32,35 @@ func ApplySyncPlan(plan *SyncPlan, roots *pathconfinement.Roots, storeDir string
 		}
 	}
 
+	if plan.Scope == types.ScopeProject {
+		if err := (ProjectSyncPlanner{Manifest: plan.Manifest, ProjectRoot: plan.ProjectRoot, HomeDir: plan.HomeDir}).RefreshStaleItems(plan); err != nil {
+			return nil, err
+		}
+	}
+
 	// 2. Create Pre-apply backup snapshot
 	backupName := fmt.Sprintf("preapply-manifest-%s", time.Now().Format("20060102-150405"))
 	var backupAgent *types.AgentID
-	if len(plan.Manifest.Agents) == 1 {
+	if plan.Manifest != nil && len(plan.Manifest.Agents) == 1 {
 		backupAgent = &plan.Manifest.Agents[0]
 	}
-	userScope := types.ScopeUser
+	backupScope := types.ScopeUser
+	if plan.Scope != "" {
+		backupScope = plan.Scope
+	}
 	if storeDir != "" {
 		state, err := snapshot.CaptureCurrentState(&types.RuntimeOptions{
 			ProjectPath:    plan.ProjectRoot,
 			HomeDir:        plan.HomeDir,
 			StoreDir:       storeDir,
 			Agent:          backupAgent,
-			Scope:          &userScope,
+			Scope:          &backupScope,
 			CaptureContent: true,
 		}, backupName)
-		if err == nil && state != nil {
-			_ = store.WriteSnapshot(storeDir, store.StoreSnapshotFrom(state.Snapshot), backupAgent)
+		if err == nil && state != nil && projectSnapshotCoversTargets(state.Snapshot, plan) {
+			if writeErr := store.WriteSnapshot(storeDir, store.StoreSnapshotFrom(state.Snapshot), backupAgent); writeErr != nil {
+				backupName = ""
+			}
 		} else {
 			backupName = ""
 		}
@@ -96,6 +107,38 @@ func ApplySyncPlan(plan *SyncPlan, roots *pathconfinement.Roots, storeDir string
 		AppliedItems:   applied,
 		Errors:         errors,
 	}, nil
+}
+
+func projectSnapshotCoversTargets(snap types.Snapshot, plan *SyncPlan) bool {
+	if plan == nil || plan.Scope != types.ScopeProject {
+		return true
+	}
+	captured := make(map[string]bool)
+	for _, entry := range snap.Content {
+		if entry.CaptureStatus != "captured" || entry.Content == nil {
+			continue
+		}
+		captured[filepath.ToSlash(entry.SourcePath)] = true
+		captured[filepath.ToSlash(entry.RestorePath)] = true
+	}
+	for _, item := range plan.Items {
+		if item.Action != "update" {
+			continue
+		}
+		if item.BaseContent == "" {
+			continue
+		}
+		rel := item.TargetFile
+		if plan.ProjectRoot != "" {
+			if next, err := filepath.Rel(plan.ProjectRoot, item.TargetFile); err == nil {
+				rel = next
+			}
+		}
+		if !captured[filepath.ToSlash(rel)] {
+			return false
+		}
+	}
+	return true
 }
 
 func copyDirOrFile(src, dst string) error {

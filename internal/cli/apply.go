@@ -20,6 +20,7 @@ type applyFlags struct {
 	ManifestPath string
 	DryRun       bool
 	Yes          bool
+	ProjectOnly  bool
 }
 
 func newApplyCmd() *cobra.Command {
@@ -29,7 +30,10 @@ func newApplyCmd() *cobra.Command {
 		Use:   "apply",
 		Short: "Apply team agent manifest (gandalf.toml) to local agent environments.",
 		Long: `Apply synchronizes the declarative team agent configuration (gandalf.toml)
-to your local Codex and Claude Code agent setups with safety pre-apply backup and review.`,
+to your local Codex, Claude Code, and Cursor agent setups with safety pre-apply backup and review.
+
+Default apply writes user-home configs only. Use --project-only to Smart Merge
+repository agent files checked by 'gandalf check --project-only' / the CI Action.`,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			exitCode := runApply(cmd, &flags)
 			if exitCode != 0 {
@@ -43,6 +47,7 @@ to your local Codex and Claude Code agent setups with safety pre-apply backup an
 	cmd.Flags().StringVar(&flags.ManifestPath, "manifest", "", "Path to gandalf.toml (default: search project root)")
 	cmd.Flags().BoolVar(&flags.DryRun, "dry-run", false, "Preview planned changes without writing to disk")
 	cmd.Flags().BoolVarP(&flags.Yes, "yes", "y", false, "Skip confirmation prompt")
+	cmd.Flags().BoolVar(&flags.ProjectOnly, "project-only", false, "Write repository agent configs (.mcp.json, .cursor/mcp.json, .codex/config.toml) instead of user-home")
 
 	return cmd
 }
@@ -67,7 +72,12 @@ func runApply(cmd *cobra.Command, flags *applyFlags) int {
 		manifestPath = found
 	}
 
-	res, err := manifest.LoadManifest(manifestPath, nil)
+	parseOpts := &manifest.ParseOptions{}
+	if flags.ProjectOnly {
+		parseOpts.NoInterpolate = true
+	}
+
+	res, err := manifest.LoadManifest(manifestPath, parseOpts)
 	if err != nil {
 		return writeError(cmd.ErrOrStderr(), &types.SnapError{
 			Code:    "MANIFEST_PARSE_ERROR",
@@ -96,14 +106,18 @@ func runApply(cmd *cobra.Command, flags *applyFlags) int {
 		_, _ = fmt.Fprintln(cmd.ErrOrStderr(), "   Make sure to export them before running agent tools that require these variables.")
 	}
 
-	scanOptions := &types.ScanOptions{
-		ProjectPath: runtime.ProjectPath,
-		HomeDir:     runtime.HomeDir,
-		StoreDir:    runtime.StoreDir,
+	var plan *sync.SyncPlan
+	if flags.ProjectOnly {
+		plan, err = sync.CreateProjectSyncPlan(res.Manifest, runtime.ProjectPath, runtime.HomeDir)
+	} else {
+		scanOptions := &types.ScanOptions{
+			ProjectPath: runtime.ProjectPath,
+			HomeDir:     runtime.HomeDir,
+			StoreDir:    runtime.StoreDir,
+		}
+		baseScan := scan.ScanProject(scanOptions)
+		plan, err = sync.CreateSyncPlan(res.Manifest, runtime.ProjectPath, runtime.HomeDir, baseScan.Evidence)
 	}
-	baseScan := scan.ScanProject(scanOptions)
-
-	plan, err := sync.CreateSyncPlan(res.Manifest, runtime.ProjectPath, runtime.HomeDir, baseScan.Evidence)
 	if err != nil {
 		return writeError(cmd.ErrOrStderr(), &types.SnapError{
 			Code:    "SYNC_PLAN_ERROR",

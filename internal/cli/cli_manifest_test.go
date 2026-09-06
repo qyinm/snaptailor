@@ -93,3 +93,92 @@ func TestCLIInitCheckApply(t *testing.T) {
 		t.Errorf("expected in sync output, got: %s", checkBuf2.String())
 	}
 }
+
+func TestCLIApplyProjectOnly_AlignsCheckProjectOnly(t *testing.T) {
+	tempDir := t.TempDir()
+	homeDir := filepath.Join(tempDir, "home")
+	projectDir := filepath.Join(tempDir, "project")
+	storeDir := filepath.Join(tempDir, "store")
+	_ = os.MkdirAll(homeDir, 0755)
+	_ = os.MkdirAll(projectDir, 0755)
+	_ = os.MkdirAll(storeDir, 0755)
+
+	t.Setenv("APP_ENV", "should-not-leak-into-project-files")
+
+	manifestContent := `
+version = "1.0"
+name = "ci-align"
+agents = ["claude-code", "codex"]
+
+[mcp_servers.echo]
+command = "echo"
+args = ["${APP_ENV}"]
+
+[env_template]
+APP_ENV = "production"
+`
+	if err := os.WriteFile(filepath.Join(projectDir, "gandalf.toml"), []byte(manifestContent), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	homeApply := newApplyCmd()
+	var homeBuf bytes.Buffer
+	homeApply.SetOut(&homeBuf)
+	homeApply.SetErr(&homeBuf)
+	homeApply.SetArgs([]string{"--project", projectDir, "--home", homeDir, "--store", storeDir, "--yes"})
+	if err := homeApply.Execute(); err != nil {
+		t.Fatalf("home apply failed: %v, output: %s", err, homeBuf.String())
+	}
+
+	projectCheck := newCheckCmd()
+	var driftBuf, driftErr bytes.Buffer
+	projectCheck.SetOut(&driftBuf)
+	projectCheck.SetErr(&driftErr)
+	projectCheck.SetArgs([]string{"--project", projectDir, "--home", homeDir, "--store", storeDir, "--project-only", "--ci"})
+	if err := projectCheck.Execute(); err == nil {
+		t.Fatalf("expected project-only check to fail after home-only apply, stdout: %s", driftBuf.String())
+	}
+	if !strings.Contains(driftBuf.String(), "DRIFT DETECTED") {
+		t.Errorf("expected drift after home-only apply, got: %s", driftBuf.String())
+	}
+	if !strings.Contains(driftBuf.String(), "gandalf apply --project-only") {
+		t.Errorf("expected project-only apply hint, got: %s", driftBuf.String())
+	}
+
+	projectApply := newApplyCmd()
+	var applyBuf bytes.Buffer
+	projectApply.SetOut(&applyBuf)
+	projectApply.SetErr(&applyBuf)
+	projectApply.SetArgs([]string{"--project", projectDir, "--home", homeDir, "--store", storeDir, "--project-only", "--yes"})
+	if err := projectApply.Execute(); err != nil {
+		t.Fatalf("project-only apply failed: %v, output: %s", err, applyBuf.String())
+	}
+
+	mcpBytes, err := os.ReadFile(filepath.Join(projectDir, ".mcp.json"))
+	if err != nil {
+		t.Fatalf("expected project .mcp.json after apply --project-only: %v", err)
+	}
+	mcp := string(mcpBytes)
+	if strings.Contains(mcp, "should-not-leak-into-project-files") {
+		t.Errorf("project apply must not interpolate process env into git files, got: %s", mcp)
+	}
+	if !strings.Contains(mcp, "${APP_ENV}") {
+		t.Errorf("expected ${APP_ENV} in project .mcp.json, got: %s", mcp)
+	}
+
+	if _, err := os.Stat(filepath.Join(projectDir, ".codex", "config.toml")); err != nil {
+		t.Fatalf("expected project Codex config after apply --project-only: %v", err)
+	}
+
+	checkAfter := newCheckCmd()
+	var syncBuf, syncErr bytes.Buffer
+	checkAfter.SetOut(&syncBuf)
+	checkAfter.SetErr(&syncErr)
+	checkAfter.SetArgs([]string{"--project", projectDir, "--home", homeDir, "--store", storeDir, "--project-only", "--ci"})
+	if err := checkAfter.Execute(); err != nil {
+		t.Fatalf("expected project-only check to pass after apply --project-only: %v\nstdout: %s\nstderr: %s", err, syncBuf.String(), syncErr.String())
+	}
+	if !strings.Contains(syncBuf.String(), "IN SYNC") {
+		t.Errorf("expected IN SYNC, got: %s", syncBuf.String())
+	}
+}

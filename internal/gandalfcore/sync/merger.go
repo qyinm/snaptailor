@@ -74,6 +74,15 @@ func MergeClaudeSettingsJSON(existingJSON string, m *manifest.Manifest) (string,
 
 // MergeCursorMCPJSON merges manifest MCP servers into an existing Cursor mcp.json without removing existing user keys.
 func MergeCursorMCPJSON(existingJSON string, m *manifest.Manifest) (string, error) {
+	return mergeCursorMCPJSON(existingJSON, m, false)
+}
+
+// ReconcileCursorMCPJSON writes only manifest-owned MCP servers, preserving non-server keys.
+func ReconcileCursorMCPJSON(existingJSON string, m *manifest.Manifest) (string, error) {
+	return mergeCursorMCPJSON(existingJSON, m, true)
+}
+
+func mergeCursorMCPJSON(existingJSON string, m *manifest.Manifest, reconcile bool) (string, error) {
 	var root map[string]any
 
 	trimmed := strings.TrimSpace(existingJSON)
@@ -89,9 +98,11 @@ func MergeCursorMCPJSON(existingJSON string, m *manifest.Manifest) (string, erro
 	}
 
 	var mcpServers map[string]any
-	if raw, ok := root["mcpServers"]; ok {
-		if m, ok := raw.(map[string]any); ok {
-			mcpServers = m
+	if !reconcile {
+		if raw, ok := root["mcpServers"]; ok {
+			if existing, ok := raw.(map[string]any); ok {
+				mcpServers = existing
+			}
 		}
 	}
 	if mcpServers == nil {
@@ -145,6 +156,15 @@ func MergeCursorMCPJSON(existingJSON string, m *manifest.Manifest) (string, erro
 
 // MergeCodexConfigTOML merges manifest MCP servers and hooks into an existing Codex config.toml without destroying user config.
 func MergeCodexConfigTOML(existingTOML string, m *manifest.Manifest) (string, error) {
+	return mergeCodexConfigTOML(existingTOML, m, false)
+}
+
+// ReconcileCodexConfigTOML keeps non-MCP keys and replaces mcp_servers with the manifest set.
+func ReconcileCodexConfigTOML(existingTOML string, m *manifest.Manifest) (string, error) {
+	return mergeCodexConfigTOML(existingTOML, m, true)
+}
+
+func mergeCodexConfigTOML(existingTOML string, m *manifest.Manifest, reconcile bool) (string, error) {
 	lines := strings.Split(existingTOML, "\n")
 	var resultLines []string
 
@@ -160,6 +180,10 @@ func MergeCodexConfigTOML(existingTOML string, m *manifest.Manifest) (string, er
 			parts := splitTOMLHeader(header)
 			if len(parts) >= 2 && parts[0] == "mcp_servers" {
 				srvName := parts[1]
+				if reconcile {
+					inMCPServerSection = true
+					continue
+				}
 				// If this server (or its nested tables like .env) is managed by manifest, we will replace it later
 				if _, exists := m.MCPServers[srvName]; exists {
 					inMCPServerSection = true

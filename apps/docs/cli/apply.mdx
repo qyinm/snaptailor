@@ -19,6 +19,7 @@ gandalf apply [flags]
 | `--manifest` | Path to `gandalf.toml` | search project root |
 | `--dry-run` | Preview without writing | off |
 | `-y`, `--yes` | Skip confirmation prompt | off |
+| `--project-only` | Write repository agent configs instead of user-home | off |
 | `-p`, `--project` | Project directory | `.` |
 | `--home` | Home directory | `$HOME` |
 | `--store` | Gandalf store directory | `~/.gandalf` or `$GANDALF_STORE` |
@@ -29,6 +30,7 @@ gandalf apply [flags]
 ```bash
 gandalf apply --dry-run
 gandalf apply --yes
+gandalf apply --project-only --yes
 gandalf apply --manifest ./config/gandalf.toml --yes
 ```
 
@@ -51,6 +53,8 @@ gandalf restore --snapshot <backup> --apply --experimental
 <Note>
   Smart Merge never deletes or modifies unrelated personal settings. Only entries declared in the manifest are added or updated.
 </Note>
+
+With `--project-only`, apply skips user-home writes and reconciles repository agent files (`.mcp.json`, `.cursor/mcp.json`, `.codex/config.toml`) to the manifest set using uninterpolated `${ENV}` templates so `gandalf check --project-only` / the CI Action can pass. Undeclared project MCP servers are removed; unrelated keys are preserved. Disk content is re-read at apply time after Review Changes.
 
 ## Related
 

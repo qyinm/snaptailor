@@ -16,6 +16,9 @@ Any divergence between the team manifest (`gandalf.toml`) and a developer's loca
 ### CI Drift Gate
 The `gandalf check --ci` contract: exit non-zero when drift or errors are detected so pull requests can be blocked before agent environments diverge. The packaged GitHub Action (PLAN.md M1) is the productized form of this gate.
 
+### Project-Only Scope
+The CI/automation scope that reads and writes repository agent files without touching user-home configs. `gandalf check --project-only` (and the GitHub Action) compare `gandalf.toml` with committed `.mcp.json`, `.cursor/mcp.json`, `.codex/config.toml`, skill sources, and `[env_template]`. `gandalf apply --project-only` reconciles those project MCP files to the manifest set (including removing undeclared servers), revalidates disk content at apply time, and keeps `${ENV}` templates uninterpolated so the CI check can pass. Default `gandalf apply` remains user-home Smart Merge and still preserves personal servers.
+
 ### Setup Container
 A historical/future portability concept for captured AI agent setup state. It can describe snapshots or bundles, but it is not the current product identity and should not imply an OS container, remote agent runtime, or active profile system.
 

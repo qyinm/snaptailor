@@ -18,6 +18,7 @@ gandalf check [flags]
 | --- | --- | --- |
 | `--manifest` | Path to `gandalf.toml` | search project root |
 | `--ci` | Exit with code 1 on drift or errors | off |
+| `--project-only` | Compare repository agent files only (no user-home). Pair with `gandalf apply --project-only` | off |
 | `-p`, `--project` | Project directory | `.` |
 | `--home` | Home directory | `$HOME` |
 | `--store` | Gandalf store directory | `~/.gandalf` or `$GANDALF_STORE` |
@@ -28,6 +29,7 @@ gandalf check [flags]
 ```bash
 gandalf check
 gandalf check --ci
+gandalf check --project-only --ci
 gandalf check --manifest ./config/gandalf.toml
 gandalf check --json
 ```

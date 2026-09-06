@@ -110,7 +110,7 @@ func captureContentBackedEvidence(evidence []types.DiscoveredItem, options *type
 		if !ok {
 			continue
 		}
-		if !isUserGlobalContentCandidate(item) {
+		if !isContentCaptureCandidate(item) {
 			continue
 		}
 		absolutePath, ok := absolutePathForSourcePath(restorePath, options)
@@ -200,6 +200,31 @@ func captureContentBackedEvidence(evidence []types.DiscoveredItem, options *type
 	}
 
 	return contentCapture{evidence: updatedEvidence, content: content}, nil
+}
+
+func isContentCaptureCandidate(item *types.DiscoveredItem) bool {
+	if isProjectMCPContentCandidate(item) {
+		return true
+	}
+	return isUserGlobalContentCandidate(item)
+}
+
+func isProjectMCPContentCandidate(item *types.DiscoveredItem) bool {
+	if item.Scope != types.ScopeProject {
+		return false
+	}
+	if item.CaptureStatus != types.CaptureCaptured {
+		return false
+	}
+	if item.Kind != types.KindAgentConfig {
+		return false
+	}
+	switch filepath.ToSlash(item.SourcePath) {
+	case ".mcp.json", ".cursor/mcp.json", ".codex/config.toml":
+		return true
+	default:
+		return false
+	}
 }
 
 func isUserGlobalContentCandidate(item *types.DiscoveredItem) bool {

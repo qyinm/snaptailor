@@ -67,7 +67,7 @@ func runCheck(cmd *cobra.Command, flags *checkFlags) int {
 	}
 
 	parseOpts := &manifest.ParseOptions{}
-	if flags.ProjectOnly || (flags.CI && os.Getenv("GITHUB_ACTIONS") == "true") {
+	if flags.projectScoped() {
 		parseOpts.NoInterpolate = true
 	}
 
@@ -96,7 +96,7 @@ func runCheck(cmd *cobra.Command, flags *checkFlags) int {
 	}
 
 	var drift *sync.DriftReport
-	if flags.ProjectOnly || (flags.CI && os.Getenv("GITHUB_ACTIONS") == "true") {
+	if flags.projectScoped() {
 		var err error
 		drift, err = sync.DetectProjectDrift(res.Manifest, runtime.ProjectPath)
 		if err != nil {
@@ -157,7 +157,7 @@ func runCheck(cmd *cobra.Command, flags *checkFlags) int {
 		}
 	}
 	_, _ = fmt.Fprintln(out)
-	_, _ = fmt.Fprintln(out, "💡 Run 'gandalf apply' to synchronize your agent environment.")
+	_, _ = fmt.Fprintln(out, flags.applyHint())
 
 	if flags.CI {
 		// Output GitHub workflow command annotations with proper property and data escaping
@@ -173,6 +173,17 @@ func runCheck(cmd *cobra.Command, flags *checkFlags) int {
 	}
 
 	return 0
+}
+
+func (f *checkFlags) projectScoped() bool {
+	return f.ProjectOnly || (f.CI && os.Getenv("GITHUB_ACTIONS") == "true")
+}
+
+func (f *checkFlags) applyHint() string {
+	if f.projectScoped() {
+		return "💡 Run 'gandalf apply --project-only' to synchronize repository agent configs."
+	}
+	return "💡 Run 'gandalf apply' to synchronize your agent environment."
 }
 
 func writeGitHubStepSummary(m *manifest.Manifest, drift *sync.DriftReport) {
@@ -213,7 +224,7 @@ func writeGitHubStepSummary(m *manifest.Manifest, drift *sync.DriftReport) {
 			detailsEsc := escapeMarkdownTableCell(item.Details)
 			sb.WriteString(fmt.Sprintf("| %d | %s | **%s** (`%s`) | %s |\n", i+1, kindBadge, nameEsc, targetEsc, detailsEsc))
 		}
-		sb.WriteString("\n> 💡 *Run `gandalf apply` locally to synchronize your agent environment.*\n\n")
+		sb.WriteString("\n> 💡 *Run `gandalf apply --project-only` to synchronize repository agent configs, or `gandalf apply` for user-home.*\n\n")
 	}
 
 	_, _ = f.WriteString(sb.String())

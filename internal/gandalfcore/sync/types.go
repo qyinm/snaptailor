@@ -38,6 +38,11 @@ type DriftReport struct {
 	MissingEnvs  []string         `json:"missingEnvs,omitempty"`
 }
 
+const (
+	projectMergeJSON = "project_mcp_json"
+	projectMergeTOML = "project_mcp_toml"
+)
+
 // SyncPlanItem represents an individual action in a sync plan.
 type SyncPlanItem struct {
 	Agent       types.AgentID      `json:"agent"`
@@ -47,16 +52,19 @@ type SyncPlanItem struct {
 	TargetFile  string             `json:"targetFile"`
 	SourceFile  string             `json:"sourceFile,omitempty"`
 	Content     string             `json:"content,omitempty"`
+	BaseContent string             `json:"baseContent,omitempty"`
+	MergeKind   string             `json:"mergeKind,omitempty"`
 	Description string             `json:"description"`
 }
 
 // SyncPlan represents the complete plan to apply a manifest.
 type SyncPlan struct {
-	Manifest    *manifest.Manifest `json:"manifest"`
-	ProjectRoot string             `json:"projectRoot"`
-	HomeDir     string             `json:"homeDir"`
-	Items       []SyncPlanItem     `json:"items"`
-	Drift       *DriftReport       `json:"drift"`
+	Manifest    *manifest.Manifest  `json:"manifest"`
+	ProjectRoot string              `json:"projectRoot"`
+	HomeDir     string              `json:"homeDir"`
+	Scope       types.EvidenceScope `json:"scope,omitempty"`
+	Items       []SyncPlanItem      `json:"items"`
+	Drift       *DriftReport        `json:"drift"`
 }
 
 // SyncApplyResult holds the outcome of applying a sync plan.
