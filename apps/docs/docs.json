@@ -84,6 +84,7 @@
               "cli/timeline",
               "cli/tui",
               "cli/init",
+              "cli/export",
               "cli/check",
               "cli/apply",
               "cli/doctor",

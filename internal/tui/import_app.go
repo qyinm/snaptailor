@@ -122,7 +122,7 @@ func scanImportSourcesCmd(opts importer.ImportOptions) tea.Cmd {
 			return importScanDoneMsg{err: err}
 		}
 		if len(candidates) == 0 {
-			return importScanDoneMsg{err: fmt.Errorf("no agent configurations found to import (checked .cursor/mcp.json, .mcp.json, ~/.cursor/mcp.json, etc.)")}
+			return importScanDoneMsg{err: fmt.Errorf("no agent configurations found to export (checked .cursor/mcp.json, .mcp.json, ~/.cursor/mcp.json, etc.)")}
 		}
 		result, err := importer.ReconcileSources(opts, candidates)
 		return importScanDoneMsg{result: result, err: err}
@@ -156,7 +156,7 @@ func (a ImportApp) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		a.buildGroups()
 		if a.itemCount() == 0 {
 			a.step = importStepFailed
-			a.err = fmt.Errorf("no importable MCP servers or skills were discovered")
+			a.err = fmt.Errorf("no MCP servers or skills were discovered to export")
 			return a, nil
 		}
 		a.manifestExists = fileExistsIn(a.opts.ProjectPath, a.opts.OutputFile)
@@ -402,11 +402,11 @@ func (a ImportApp) maskedCount() int {
 func (a ImportApp) View() string {
 	switch a.step {
 	case importStepLoading:
-		return views.RenderImportLoading("Import agent setup", a.opts.ProjectPath, a.width, a.height)
+		return views.RenderImportLoading("Export agent setup", a.opts.ProjectPath, a.width, a.height)
 
 	case importStepSelect, importStepConfirmOverwrite:
 		model := views.ImportSelectModel{
-			Title:       "Import agent setup",
+			Title:       "Export agent setup",
 			ProjectPath: a.opts.ProjectPath,
 			Warnings:    a.result.Warnings,
 			Width:       a.width,
@@ -450,7 +450,7 @@ func (a ImportApp) View() string {
 
 	case importStepWriting:
 		return views.RenderImportResult(views.ImportResultModel{
-			Title:  "Import agent setup",
+			Title:  "Export agent setup",
 			Lines:  []string{fmt.Sprintf("Writing %s and mirroring team skills…", a.opts.OutputFile)},
 			Hint:   "please wait",
 			Width:  a.width,
@@ -485,7 +485,7 @@ func (a ImportApp) View() string {
 			"  3. Team members can run 'gandalf apply' to sync their local agent setup.",
 		)
 		return views.RenderImportResult(views.ImportResultModel{
-			Title:  "Import complete",
+			Title:  "Export complete",
 			Badge:  "In Sync",
 			Lines:  lines,
 			Hint:   "any key to exit",
@@ -499,7 +499,7 @@ func (a ImportApp) View() string {
 			errText = a.err.Error()
 		}
 		return views.RenderImportResult(views.ImportResultModel{
-			Title:  "Import failed",
+			Title:  "Export failed",
 			Badge:  "Drift",
 			Lines:  []string{errText},
 			Hint:   "any key to exit",

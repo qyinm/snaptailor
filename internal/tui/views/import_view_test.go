@@ -26,7 +26,7 @@ func assertLineCount(t *testing.T, rendered string, maxLines int) {
 func sampleSelectModel(width, height int) ImportSelectModel {
 	longDetail := strings.Repeat("very-long-command-", 12)
 	return ImportSelectModel{
-		Title:       "Import agent setup",
+		Title:       "Export agent setup",
 		ProjectPath: "/Users/someone/projects/with-a-rather-long-path-name/gandalf",
 		Width:       width,
 		Height:      height,
@@ -58,7 +58,7 @@ func TestRenderImportSelect_FitsStandardTerminal(t *testing.T) {
 	assertLineCount(t, rendered, 24)
 
 	plain := ansi.Strip(rendered)
-	for _, want := range []string{"Claude Code", "Cursor", "db-server", "[Discovered]", "space toggle", "tab preview", "enter import", "q cancel"} {
+	for _, want := range []string{"Claude Code", "Cursor", "db-server", "[Discovered]", "space toggle", "tab preview", "enter export", "q cancel"} {
 		if !strings.Contains(plain, want) {
 			t.Errorf("expected select screen to contain %q", want)
 		}
@@ -147,7 +147,7 @@ func TestRenderImportPreview_OffsetScrolls(t *testing.T) {
 
 func TestRenderImportResult_Badges(t *testing.T) {
 	done := ansi.Strip(RenderImportResult(ImportResultModel{
-		Title: "Import complete", Badge: "In Sync",
+		Title: "Export complete", Badge: "In Sync",
 		Lines: []string{"Generated gandalf.toml"}, Hint: "any key to exit", Width: 80, Height: 24,
 	}))
 	if !strings.Contains(done, "[In Sync]") {
@@ -155,7 +155,7 @@ func TestRenderImportResult_Badges(t *testing.T) {
 	}
 
 	failed := ansi.Strip(RenderImportResult(ImportResultModel{
-		Title: "Import failed", Badge: "Drift",
+		Title: "Export failed", Badge: "Drift",
 		Lines: []string{"boom"}, Hint: "any key to exit", Width: 80, Height: 24,
 	}))
 	if !strings.Contains(failed, "[Drift]") || !strings.Contains(failed, "boom") {
@@ -196,7 +196,7 @@ func TestRenderImportSelect_CursorRowSurvivesManyWarnings(t *testing.T) {
 }
 
 func TestRenderImportLoading_Fits(t *testing.T) {
-	rendered := RenderImportLoading("Import agent setup", "/repo", 80, 24)
+	rendered := RenderImportLoading("Export agent setup", "/repo", 80, 24)
 	assertLinesFit(t, rendered, 80)
 	assertLineCount(t, rendered, 24)
 	if !strings.Contains(ansi.Strip(rendered), "Scanning") {

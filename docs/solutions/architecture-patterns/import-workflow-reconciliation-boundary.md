@@ -21,7 +21,7 @@ tags: [importer, security, path-confinement, secret-redaction, skill-mirroring, 
 
 When teams adopt "Agent Environment as Code", individual engineers already have fragmented, local configuration files across Claude Code (`.mcp.json`, `~/.claude.json`), OpenAI Codex (`~/.codex/config.toml`), and Cursor (`.cursor/mcp.json`, `~/.cursor/mcp.json`).
 
-The `gandalf import` command was designed to reverse-engineer these existing setups into a single, clean `gandalf.toml` manifest without manual copy-pasting. However, importing native agent setups poses unique security and reliability risks:
+The `gandalf export` command (with `gandalf import` as a backward-compatible alias) was designed to reverse-engineer these existing setups into a single, clean `gandalf.toml` manifest without manual copy-pasting. However, exporting native agent setups into a team manifest poses unique security and reliability risks:
 1. Hardcoded API tokens, database connection strings, and OAuth tokens in headers, commands, or arguments can leak into git-tracked files.
 2. In-project or destination directory symlinks can allow attacker-manipulated path traversal outside the repository boundary.
 3. Overwriting existing team skills or aborting midway through skill copying can leave repository workspaces in corrupted states.

@@ -1,0 +1,48 @@
+---
+title: "gandalf export"
+description: "Export local agent environment to gandalf.toml. import is a backward-compatible alias."
+---
+
+# `gandalf export`
+
+`gandalf export` scans existing Cursor, Claude Code, and Codex configurations and writes a canonical `gandalf.toml`. Applying that manifest onto local agent configs is `gandalf apply`.
+
+`gandalf import` is a backward-compatible alias for the same command.
+
+```bash
+gandalf export [flags]
+gandalf import [flags]
+```
+
+---
+
+## Flags
+
+| Flag | Shorthand | Default | Description |
+|---|:---:|:---:|---|
+| `--project-only` | | `false` | Restrict scan to repository files only. |
+| `--from` | | | Export strictly from a specific file or directory. |
+| `--dry-run` | | `false` | Preview generated `gandalf.toml` without writing. |
+| `--force` | `-f` | `false` | Overwrite existing `gandalf.toml` if present. |
+| `--output` | `-o` | `gandalf.toml` | Output manifest file path. |
+| `--interactive` | `-i` | `false` | Launch interactive TUI wizard. |
+| `--json` | | `false` | Return JSON response. |
+
+---
+
+## Examples
+
+### Preview without writing
+```bash
+gandalf export --dry-run
+```
+
+### Project files only
+```bash
+gandalf export --project-only
+```
+
+### Backward-compatible alias
+```bash
+gandalf import --dry-run
+```

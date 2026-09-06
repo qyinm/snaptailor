@@ -11,7 +11,7 @@ import (
 	"github.com/qyinm/gandalf/internal/gandalfcore/types"
 )
 
-func TestCLIImport_Success(t *testing.T) {
+func TestCLIExport_Success(t *testing.T) {
 	t.Parallel()
 	projectPath, homeDir, _ := makeSandbox(t)
 
@@ -29,7 +29,7 @@ func TestCLIImport_Success(t *testing.T) {
 	}
 
 	stdout, stderr, code := runCLI(t,
-		"import",
+		"export",
 		"--project", projectPath,
 		"--home", homeDir,
 	)
@@ -60,7 +60,7 @@ func TestCLIImport_Success(t *testing.T) {
 	}
 }
 
-func TestCLIImport_DryRun(t *testing.T) {
+func TestCLIExport_DryRun(t *testing.T) {
 	t.Parallel()
 	projectPath, homeDir, _ := makeSandbox(t)
 
@@ -70,7 +70,7 @@ func TestCLIImport_DryRun(t *testing.T) {
 	}
 
 	stdout, stderr, code := runCLI(t,
-		"import",
+		"export",
 		"--project", projectPath,
 		"--home", homeDir,
 		"--dry-run",
@@ -90,7 +90,7 @@ func TestCLIImport_DryRun(t *testing.T) {
 	}
 }
 
-func TestCLIImport_JSONOutput(t *testing.T) {
+func TestCLIExport_JSONOutput(t *testing.T) {
 	t.Parallel()
 	projectPath, homeDir, _ := makeSandbox(t)
 
@@ -100,7 +100,7 @@ func TestCLIImport_JSONOutput(t *testing.T) {
 	}
 
 	stdout, stderr, code := runCLI(t,
-		"import",
+		"export",
 		"--project", projectPath,
 		"--home", homeDir,
 		"--json",
@@ -120,7 +120,7 @@ func TestCLIImport_JSONOutput(t *testing.T) {
 	}
 }
 
-func TestCLIImport_ForceOverwrite(t *testing.T) {
+func TestCLIExport_ForceOverwrite(t *testing.T) {
 	t.Parallel()
 	projectPath, homeDir, _ := makeSandbox(t)
 
@@ -136,7 +136,7 @@ func TestCLIImport_ForceOverwrite(t *testing.T) {
 
 	// Running without --force should fail
 	_, stderr, code := runCLI(t,
-		"import",
+		"export",
 		"--project", projectPath,
 		"--home", homeDir,
 	)
@@ -150,7 +150,7 @@ func TestCLIImport_ForceOverwrite(t *testing.T) {
 
 	// Running with --force should succeed
 	stdout, stderr, code := runCLI(t,
-		"import",
+		"export",
 		"--project", projectPath,
 		"--home", homeDir,
 		"--force",
@@ -164,7 +164,7 @@ func TestCLIImport_ForceOverwrite(t *testing.T) {
 	}
 }
 
-func TestCLIImport_ProjectOnly(t *testing.T) {
+func TestCLIExport_ProjectOnly(t *testing.T) {
 	t.Parallel()
 	projectPath, homeDir, _ := makeSandbox(t)
 
@@ -187,7 +187,7 @@ func TestCLIImport_ProjectOnly(t *testing.T) {
 	}
 
 	stdout, stderr, code := runCLI(t,
-		"import",
+		"export",
 		"--project", projectPath,
 		"--home", homeDir,
 		"--project-only",
@@ -260,7 +260,7 @@ func TestShouldLaunchImportTUI(t *testing.T) {
 	}
 }
 
-func TestRunCLIImport_DoesNotLaunchTUIWhenPiped(t *testing.T) {
+func TestRunCLIExport_DoesNotLaunchTUIWhenPiped(t *testing.T) {
 	projectPath, homeDir, _ := makeSandbox(t)
 
 	mcpJSON := `{"mcpServers": {"piped-server": {"command": "npx"}}}`
@@ -278,7 +278,7 @@ func TestRunCLIImport_DoesNotLaunchTUIWhenPiped(t *testing.T) {
 	defer restore()
 
 	_, stderr, code := runCLI(t,
-		"import",
+		"export",
 		"--project", projectPath,
 		"--home", homeDir,
 	)
@@ -290,7 +290,7 @@ func TestRunCLIImport_DoesNotLaunchTUIWhenPiped(t *testing.T) {
 	}
 }
 
-func TestCLIImport_InteractiveFlag_LaunchesTUI(t *testing.T) {
+func TestCLIExport_InteractiveFlag_LaunchesTUI(t *testing.T) {
 	projectPath, homeDir, _ := makeSandbox(t)
 
 	mcpJSON := `{"mcpServers": {"interactive-server": {"command": "npx"}}}`
@@ -308,7 +308,7 @@ func TestCLIImport_InteractiveFlag_LaunchesTUI(t *testing.T) {
 	defer restore()
 
 	stdout, stderr, code := runCLI(t,
-		"import",
+		"export",
 		"--project", projectPath,
 		"--home", homeDir,
 		"--interactive",
@@ -329,7 +329,7 @@ func TestCLIImport_InteractiveFlag_LaunchesTUI(t *testing.T) {
 	}
 }
 
-func TestCLIImport_InteractiveFlag_DryRunOverridesTUI(t *testing.T) {
+func TestCLIExport_InteractiveFlag_DryRunOverridesTUI(t *testing.T) {
 	projectPath, homeDir, _ := makeSandbox(t)
 
 	mcpJSON := `{"mcpServers": {"demo": {"command": "node"}}}`
@@ -345,7 +345,7 @@ func TestCLIImport_InteractiveFlag_DryRunOverridesTUI(t *testing.T) {
 	defer restore()
 
 	stdout, stderr, code := runCLI(t,
-		"import",
+		"export",
 		"--project", projectPath,
 		"--home", homeDir,
 		"--interactive",
@@ -363,7 +363,7 @@ func TestCLIImport_InteractiveFlag_DryRunOverridesTUI(t *testing.T) {
 	}
 }
 
-func TestCLIImport_InteractiveFlag_JSONOverridesTUI(t *testing.T) {
+func TestCLIExport_InteractiveFlag_JSONOverridesTUI(t *testing.T) {
 	projectPath, homeDir, _ := makeSandbox(t)
 
 	mcpJSON := `{"mcpServers": {"demo": {"command": "node"}}}`
@@ -379,7 +379,7 @@ func TestCLIImport_InteractiveFlag_JSONOverridesTUI(t *testing.T) {
 	defer restore()
 
 	stdout, stderr, code := runCLI(t,
-		"import",
+		"export",
 		"--project", projectPath,
 		"--home", homeDir,
 		"-i",
@@ -398,7 +398,7 @@ func TestCLIImport_InteractiveFlag_JSONOverridesTUI(t *testing.T) {
 	}
 }
 
-func TestCLIImport_CustomOutput(t *testing.T) {
+func TestCLIExport_CustomOutput(t *testing.T) {
 	t.Parallel()
 	projectPath, homeDir, _ := makeSandbox(t)
 
@@ -409,7 +409,7 @@ func TestCLIImport_CustomOutput(t *testing.T) {
 
 	customOut := "custom-manifest.toml"
 	stdout, stderr, code := runCLI(t,
-		"import",
+		"export",
 		"--project", projectPath,
 		"--home", homeDir,
 		"-o", customOut,
@@ -426,7 +426,7 @@ func TestCLIImport_CustomOutput(t *testing.T) {
 	}
 }
 
-func TestCLIImport_FromFlag(t *testing.T) {
+func TestCLIExport_FromFlag(t *testing.T) {
 	t.Parallel()
 	projectPath, homeDir, _ := makeSandbox(t)
 
@@ -439,7 +439,7 @@ func TestCLIImport_FromFlag(t *testing.T) {
 	}
 
 	_, stderr, code := runCLI(t,
-		"import",
+		"export",
 		"--project", projectPath,
 		"--home", homeDir,
 		"--from", customPath,
@@ -455,5 +455,93 @@ func TestCLIImport_FromFlag(t *testing.T) {
 	}
 	if !strings.Contains(string(manifestData), "explicit-server") {
 		t.Errorf("expected explicit-server from --from file, got content: %s", string(manifestData))
+	}
+}
+
+func TestCLIExport_HelpIsPrimaryAndDocumentsImportAlias(t *testing.T) {
+	t.Parallel()
+
+	stdout, stderr, code := runCLI(t, "export", "--help")
+	if code != 0 {
+		t.Fatalf("expected exit code 0, got %d. Stderr: %s", code, stderr)
+	}
+	if !strings.Contains(stdout, "Export scans existing AI agent configurations") {
+		t.Errorf("expected export long help, got: %s", stdout)
+	}
+	if !strings.Contains(stdout, "gandalf export") {
+		t.Errorf("expected primary usage gandalf export, got: %s", stdout)
+	}
+	if !strings.Contains(stdout, "Aliases:") || !strings.Contains(stdout, "import") {
+		t.Errorf("expected import alias documented in export help, got: %s", stdout)
+	}
+	if !strings.Contains(stdout, "backward-compatible alias") {
+		t.Errorf("expected alias guidance in long help, got: %s", stdout)
+	}
+	if !strings.Contains(stdout, "gandalf apply") {
+		t.Errorf("expected apply contrast in long help, got: %s", stdout)
+	}
+}
+
+func TestCLIRootHelp_ListsExportNotImportAsPrimary(t *testing.T) {
+	t.Parallel()
+
+	stdout, stderr, code := runCLI(t, "--help")
+	if code != 0 {
+		t.Fatalf("expected exit code 0, got %d. Stderr: %s", code, stderr)
+	}
+	if !strings.Contains(stdout, "export") {
+		t.Errorf("expected export in root command list, got: %s", stdout)
+	}
+	// Cobra lists the primary Use name, not aliases, under Available Commands.
+	for _, line := range strings.Split(stdout, "\n") {
+		trimmed := strings.TrimSpace(line)
+		if strings.HasPrefix(trimmed, "import ") || trimmed == "import" {
+			t.Errorf("import must not appear as a primary command in root help: %q", line)
+		}
+	}
+}
+
+func TestCLIImport_AliasRunsSamePath(t *testing.T) {
+	t.Parallel()
+	projectPath, homeDir, _ := makeSandbox(t)
+
+	mcpJSON := `{"mcpServers": {"alias-server": {"command": "npx"}}}`
+	if err := os.WriteFile(filepath.Join(projectPath, ".mcp.json"), []byte(mcpJSON), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	stdout, stderr, code := runCLI(t,
+		"import",
+		"--project", projectPath,
+		"--home", homeDir,
+	)
+	if code != 0 {
+		t.Fatalf("expected import alias to succeed, got %d. Stderr: %s", code, stderr)
+	}
+	if !strings.Contains(stdout, "Successfully generated gandalf.toml") {
+		t.Errorf("expected success message from import alias, got: %s", stdout)
+	}
+
+	manifestData, err := os.ReadFile(filepath.Join(projectPath, "gandalf.toml"))
+	if err != nil {
+		t.Fatalf("failed to read generated gandalf.toml: %v", err)
+	}
+	if !strings.Contains(string(manifestData), "alias-server") {
+		t.Errorf("expected alias-server in gandalf.toml")
+	}
+}
+
+func TestCLIImport_HelpResolvesToExport(t *testing.T) {
+	t.Parallel()
+
+	stdout, stderr, code := runCLI(t, "import", "--help")
+	if code != 0 {
+		t.Fatalf("expected exit code 0, got %d. Stderr: %s", code, stderr)
+	}
+	if !strings.Contains(stdout, "gandalf export") {
+		t.Errorf("import --help should show export as the primary command, got: %s", stdout)
+	}
+	if !strings.Contains(stdout, "backward-compatible alias") {
+		t.Errorf("import --help should document the alias, got: %s", stdout)
 	}
 }

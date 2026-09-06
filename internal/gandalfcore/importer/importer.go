@@ -159,7 +159,7 @@ func RunImport(opts ImportOptions) (*ImportResult, error) {
 	}
 
 	if len(candidates) == 0 {
-		return nil, fmt.Errorf("no agent configurations found to import (checked .cursor/mcp.json, .mcp.json, ~/.cursor/mcp.json, etc.)")
+		return nil, fmt.Errorf("no agent configurations found to export (checked .cursor/mcp.json, .mcp.json, ~/.cursor/mcp.json, etc.)")
 	}
 
 		result, err := ReconcileSources(opts, candidates)

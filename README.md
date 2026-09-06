@@ -108,6 +108,7 @@ go install github.com/qyinm/gandalf/cmd/gandalf@latest
 | Command | Description |
 | :--- | :--- |
 | `gandalf init` | Initialize a starter `gandalf.toml` in the current repository. |
+| `gandalf export` | Generate `gandalf.toml` from existing local agent configs. `gandalf import` is a backward-compatible alias. |
 | `gandalf check [--ci]` | Check for drift between `gandalf.toml` and local agent setups. `--project-only` compares repository MCP files. Exits with code 1 if drift detected in `--ci` mode. |
 | `gandalf apply [--dry-run]` | Non-destructively merge team manifest into local agent environments with pre-apply snapshot backup. `--project-only` writes repository MCP files instead of user-home. |
 | `gandalf restore --snapshot <id> --apply` | Instantly roll back agent configurations to a previous safety snapshot. |

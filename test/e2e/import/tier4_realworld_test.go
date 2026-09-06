@@ -104,10 +104,10 @@ env.EVAL_ENV = "test"
 		t.Fatal(err)
 	}
 
-	// Run gandalf import
-	stdout, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	// Run gandalf export
+	stdout, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
-		t.Fatalf("gandalf import failed with code %d.\nStdout: %s\nStderr: %s", code, stdout, stderr)
+		t.Fatalf("gandalf export failed with code %d.\nStdout: %s\nStderr: %s", code, stdout, stderr)
 	}
 
 	// Verification 1: Manifest generated and passes manifest.Validate with 0 errors
@@ -203,7 +203,7 @@ func TestTier4_RealWorld_EnterpriseMultiDeveloperSetup(t *testing.T) {
 	}
 
 	// Run import across project and global
-	stdout, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir)
+	stdout, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir)
 	if code != 0 {
 		t.Fatalf("import failed: %d, stderr: %s, stdout: %s", code, stderr, stdout)
 	}
@@ -240,7 +240,7 @@ func TestTier4_RealWorld_EnterpriseMultiDeveloperSetup(t *testing.T) {
 }
 
 // Scenario 3: CI Fresh Clone Pipeline gate
-// In CI, automated pipeline runs gandalf import --project-only, then immediately runs
+// In CI, automated pipeline runs gandalf export --project-only, then immediately runs
 // gandalf check --project-only --ci. Asserts exit code 0 and InSync = true.
 func TestTier4_RealWorld_CIPipelineDriftGate(t *testing.T) {
 	t.Parallel()
@@ -270,8 +270,8 @@ func TestTier4_RealWorld_CIPipelineDriftGate(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// Step 1: CI runs gandalf import --project-only
-	stdout, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	// Step 1: CI runs gandalf export --project-only
+	stdout, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("CI import step failed: %d\nStdout: %s\nStderr: %s", code, stdout, stderr)
 	}
@@ -312,7 +312,7 @@ func TestTier4_RealWorld_LegacyAgentMigrationViaFromDir(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	stdout, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--from", legacyDir, "--project-only")
+	stdout, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--from", legacyDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("import from legacyDir failed: %d\nStdout: %s\nStderr: %s", code, stdout, stderr)
 	}
@@ -337,7 +337,7 @@ func TestTier4_RealWorld_LegacyAgentMigrationViaFromDir(t *testing.T) {
 
 // Scenario 5: Incremental Re-Import & Idempotency
 // Repository already has gandalf.toml. A new agent (Cursor) is added with new servers and skills.
-// gandalf import --project-only --force is run. Asserts manifest updates safely, subsequent run
+// gandalf export --project-only --force is run. Asserts manifest updates safely, subsequent run
 // is completely idempotent, and gandalf check --project-only passes with InSync = true.
 func TestTier4_RealWorld_IdempotentReImportAfterUpdate(t *testing.T) {
 	t.Parallel()
@@ -352,7 +352,7 @@ func TestTier4_RealWorld_IdempotentReImportAfterUpdate(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, stderr, code := runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only")
+	_, stderr, code := runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only")
 	if code != 0 {
 		t.Fatalf("initial import failed: %d, stderr: %s", code, stderr)
 	}
@@ -376,7 +376,7 @@ func TestTier4_RealWorld_IdempotentReImportAfterUpdate(t *testing.T) {
 	}
 
 	// 3. Re-import with --force
-	_, stderr, code = runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only", "--force")
+	_, stderr, code = runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only", "--force")
 	if code != 0 {
 		t.Fatalf("re-import with force failed: %d, stderr: %s", code, stderr)
 	}
@@ -399,7 +399,7 @@ func TestTier4_RealWorld_IdempotentReImportAfterUpdate(t *testing.T) {
 	}
 
 	// 5. Run import a third time to verify strict idempotency
-	_, stderr, code = runCLI(t, "import", "--project", projectPath, "--home", homeDir, "--project-only", "--force")
+	_, stderr, code = runCLI(t, "export", "--project", projectPath, "--home", homeDir, "--project-only", "--force")
 	if code != 0 {
 		t.Fatalf("third import failed: %d, stderr: %s", code, stderr)
 	}

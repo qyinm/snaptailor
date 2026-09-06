@@ -109,13 +109,13 @@ func RenderImportView(m ImportViewModel) string {
 
 	title := m.Title
 	if title == "" {
-		title = "Gandalf Import Wizard"
+		title = "Gandalf Export Wizard"
 	}
 	header := RenderHeader(HeaderView{
 		Title: title,
 		Scope: m.ProjectPath,
 		Chips: []HeaderChip{{
-			AgentMarker: "import",
+			AgentMarker: "export",
 			State:       "clean",
 			Detail:      "scan",
 		}},
@@ -146,9 +146,9 @@ func RenderImportView(m ImportViewModel) string {
 	if m.ConfirmOverwrite {
 		status = importHelpBar(width, "Enter / y confirm overwrite", "Esc / n cancel")
 	} else if m.ActivePane == FocusPreview {
-		status = importHelpBar(width, "j/k scroll preview", "tab items tree", "enter import", "esc back", "q cancel")
+		status = importHelpBar(width, "j/k scroll preview", "tab items tree", "enter export", "esc back", "q cancel")
 	} else {
-		status = importHelpBar(width, "space toggle", "↑/↓ nav", "tab diff preview", "enter import", "q cancel")
+		status = importHelpBar(width, "space toggle", "↑/↓ nav", "tab diff preview", "enter export", "q cancel")
 	}
 
 	frame := RenderFrame(header, body, status, width, height)
@@ -193,7 +193,7 @@ func renderSourcesTreeBox(groups []ImportGroupView, warnings []string, width, he
 		head := labelStyle.Render("▼ "+group.Agent+scope) + " " + mutedStyle.Render(group.Path)
 		lines = append(lines, truncate(head, innerWidth))
 		if len(group.Items) == 0 {
-			lines = append(lines, truncate("    "+mutedStyle.Render("no importable items"), innerWidth))
+			lines = append(lines, truncate("    "+mutedStyle.Render("no items to export"), innerWidth))
 		}
 		for _, item := range group.Items {
 			if item.Cursor {
@@ -298,7 +298,7 @@ func renderConfirmOverwriteModal(background string, outputFile string, width, he
 	lines := []string{
 		warnStyle.Bold(true).Render(truncate("⚠️  "+outputFile+" Already Exists", contentWidth)),
 		"",
-		truncate("Overwrite existing manifest with imported config?", contentWidth),
+		truncate("Overwrite existing manifest with exported config?", contentWidth),
 		truncate("Existing content will be replaced atomically.", contentWidth),
 		"",
 		activeStyle.Render(truncate("Enter / y Confirm  ·  Esc / n Cancel", contentWidth)),
@@ -364,7 +364,7 @@ func RenderImportDiffPreview(m ImportPreviewModel) string {
 	pane := border.Width(width - 4).Render(strings.Join(rendered, "\n"))
 
 	scrollHint := fmt.Sprintf("lines %d-%d of %d", m.Offset+1, max(end, 1), len(lines))
-	status := importHelpBar(width, "j/k scroll", "tab back", "enter import", "q cancel", scrollHint)
+	status := importHelpBar(width, "j/k scroll", "tab back", "enter export", "q cancel", scrollHint)
 	return RenderFrame(header, pane, status, width, m.Height)
 }
 
@@ -380,7 +380,7 @@ func RenderImportSelect(m ImportSelectModel) string {
 		Title: m.Title,
 		Scope: m.ProjectPath,
 		Chips: []HeaderChip{{
-			AgentMarker: "import",
+			AgentMarker: "export",
 			State:       "clean",
 			Detail:      "scan",
 		}},
@@ -402,7 +402,7 @@ func RenderImportSelect(m ImportSelectModel) string {
 		head := labelStyle.Render(group.Agent+scope) + "  " + ImportBadge("Discovered") + "  " + mutedStyle.Render(group.Path)
 		body = append(body, truncate(head, width))
 		if len(group.Items) == 0 {
-			body = append(body, truncate("    "+mutedStyle.Render("no importable items"), width))
+			body = append(body, truncate("    "+mutedStyle.Render("no items to export"), width))
 		}
 		for _, item := range group.Items {
 			if item.Cursor {
@@ -427,7 +427,7 @@ func RenderImportSelect(m ImportSelectModel) string {
 		body = body[offset:end]
 	}
 
-	status := importHelpBar(width, "space toggle", "tab preview", "enter import", "q cancel")
+	status := importHelpBar(width, "space toggle", "tab preview", "enter export", "q cancel")
 	return RenderFrame(header, strings.Join(body, "\n"), status, width, m.Height)
 }
 

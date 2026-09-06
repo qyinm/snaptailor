@@ -7,15 +7,15 @@ description: "Declare team-wide MCP servers, skills, and hooks in gandalf.toml. 
 Gandalf's team manifest lets you declare a shared AI agent environment as code. Commit a `gandalf.toml` at the repository root, and teammates get a repeatable Codex, Claude Code, and Cursor setup with drift detection and non-destructive apply.
 
 <Steps>
-  <Step title="Initialize the manifest">
-    Create the manifest and skills directory. Use `--from-current` to scaffold from your local setup.
+  <Step title="Initialize or export the manifest">
+    Create a starter manifest, or export one from your existing local agent setup. `gandalf import` is a backward-compatible alias for `gandalf export`.
 
     ```bash
     gandalf init --name my-team-project
-    gandalf init --from-current
+    gandalf export
     ```
 
-    This writes `gandalf.toml` and `.gandalf/skills/`. Use `-f` to overwrite an existing manifest.
+    `gandalf export` writes `gandalf.toml` and mirrors team skills into `.gandalf/skills/`. Use `-f` to overwrite an existing manifest. `gandalf init --from-current` remains a lighter scaffold from a local scan.
   </Step>
   <Step title="Edit gandalf.toml">
     Declare MCP servers, skills, hooks, and an env template. `${ENV_VAR}` interpolation is supported.
@@ -80,6 +80,7 @@ Gandalf's team manifest lets you declare a shared AI agent environment as code. 
 ## Related
 
 - [`gandalf init` reference](/cli/init)
+- [`gandalf export` reference](/cli/export)
 - [`gandalf check` reference](/cli/check)
 - [`gandalf apply` reference](/cli/apply)
 - [Manifest reference](/reference/manifest)
