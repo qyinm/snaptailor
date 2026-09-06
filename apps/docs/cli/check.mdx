@@ -1,7 +1,7 @@
 ---
 title: "gandalf check: detect drift from the team manifest"
 sidebarTitle: "check"
-description: "Compare gandalf.toml against local Codex and Claude Code setup and report missing MCP servers, skills, or hooks. Add --ci to exit non-zero on drift."
+description: "Compare gandalf.toml against local Codex, Claude Code, and Cursor setup and report missing MCP servers, skills, or hooks. Add --ci to exit non-zero on drift."
 ---
 
 `gandalf check` compares the team manifest at `gandalf.toml` with your local agent environment and reports drift. Use it locally to preview what `gandalf apply` would do, or in CI to enforce team standards.
@@ -45,13 +45,15 @@ Example:
 
 ```text
 📦 Team Manifest: my-team-project (version: 1.0)
-🎯 Target Agents: claude-code, codex
+🎯 Target Agents: claude-code, codex, cursor
 
 ⚠️  [DRIFT DETECTED] The following items are missing or out of sync:
   [1] [claude-code] mcp_server: postgres-db (~/.claude/settings.json)
 ```
 
 Add `--json` for machine output containing the parsed manifest and drift list.
+
+Default check compares user-home agent configs. `--project-only` (and GitHub Actions) compare repository MCP files only and should be paired with `gandalf apply --project-only`.
 
 ## Errors
 

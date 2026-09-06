@@ -1,6 +1,6 @@
 # Gandalf Architecture
 
-Gandalf is the **Infrastructure as Code (IaC) layer and local control console for AI agent environments** (Claude Code, OpenAI Codex). It allows teams to declare, verify, and synchronize agent capabilities (MCP servers, skills, guardrail hooks, and environment templates) via a version-controlled `gandalf.toml` manifest, with non-destructive Smart Merge, automated safety snapshots, and CI drift gating.
+Gandalf is the **Infrastructure as Code (IaC) layer and local control console for AI agent environments** (Claude Code, OpenAI Codex, Cursor). It allows teams to declare, verify, and synchronize agent capabilities (MCP servers, skills, guardrail hooks, and environment templates) via a version-controlled `gandalf.toml` manifest, with non-destructive Smart Merge, automated safety snapshots, and CI drift gating.
 
 ---
 
@@ -16,7 +16,7 @@ gandalf/
 │   ├── gandalfcore/         # Core IaC & Safety Engine
 │   │   ├── manifest/        # gandalf.toml parser & schema validator
 │   │   ├── sync/            # Non-destructive Smart Merge engine
-│   │   ├── scan/            # Read-only agent discovery (Claude Code, Codex)
+│   │   ├── scan/            # Read-only agent discovery (Claude Code, Codex, Cursor)
 │   │   ├── snapshot/        # SHA-256 pre-apply snapshot creator
 │   │   ├── restore/         # Rollback & safety restore planner
 │   │   └── pathconfinement/ # Strict root containment boundary
@@ -50,7 +50,7 @@ Gandalf enforces a 3-step declarative IaC workflow:
 ```
 
 ### 1. `gandalf init` (Manifest Declaration)
-* Scans local active agents (Claude Code, Codex) and generates a standardized, human-readable `gandalf.toml` manifest.
+* Scans local active agents (Claude Code, Codex, Cursor) and generates a standardized, human-readable `gandalf.toml` manifest.
 * Declares required MCP servers, skills, guardrail hooks, and environment variable templates.
 
 ### 2. `gandalf check [--ci]` (Drift Gatekeeper)
@@ -71,7 +71,7 @@ Gandalf enforces a 3-step declarative IaC workflow:
 | :--- | :--- |
 | `manifest/` | Parses and validates `gandalf.toml` schemas and environment variable bindings. |
 | `sync/` | Executes structural Smart Merge against agent-native config files (JSON/TOML). |
-| `scan/` & `scan/plugins/` | Inspects user-global Claude Code (`~/.claude.json`, `settings.json`) and Codex (`~/.codex/config.toml`) configurations without executing tools. |
+| `scan/` & `scan/plugins/` | Inspects Claude Code (`~/.claude.json`, `settings.json`, project `.mcp.json`), Codex (`~/.codex/config.toml`, project `.codex/config.toml`), and Cursor (`.cursor/` / `~/.cursor/`, including Agent CLI config) without executing tools. |
 | `snapshot/` & `store/` | Generates immutable, compressed SHA-256 snapshots with metadata and timestamps. |
 | `restore/` | Compares baseline snapshots against current state and orchestrates safe rollback. |
 | `pathconfinement/` | Enforces strict path security, refusing to read or write outside designated project/home roots and denying symlinks. |
@@ -83,7 +83,7 @@ Gandalf enforces a 3-step declarative IaC workflow:
 
 * **Read-only Scan Rule**: Scanners inspect static configuration files only. They never execute arbitrary MCP commands, shell hooks, or network requests during discovery.
 * **Explicit Write Boundary**: File writes only occur during explicit `gandalf apply` or `gandalf restore` executions.
-* **Path Confinement**: All writes are strictly confined to known configuration locations (`$HOME/.claude/`, `$HOME/.codex/`, and local project directory). Symlink write targets are rejected.
+* **Path Confinement**: All writes are strictly confined to known configuration locations (`$HOME/.claude/`, `$HOME/.codex/`, `$HOME/.cursor/`, and local project directory). Symlink write targets are rejected.
 * **100% Local-First**: Gandalf operates entirely offline with zero external SaaS dependencies or telemetry leaks.
 
 ---

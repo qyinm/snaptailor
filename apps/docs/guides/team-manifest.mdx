@@ -4,7 +4,7 @@ sidebarTitle: "Team Manifest"
 description: "Declare team-wide MCP servers, skills, and hooks in gandalf.toml. Detect drift with gandalf check and apply safely with a pre-apply snapshot."
 ---
 
-Gandalf's team manifest lets you declare a shared AI agent environment as code. Commit a `gandalf.toml` at the repository root, and teammates get a repeatable Codex and Claude Code setup with drift detection and non-destructive apply.
+Gandalf's team manifest lets you declare a shared AI agent environment as code. Commit a `gandalf.toml` at the repository root, and teammates get a repeatable Codex, Claude Code, and Cursor setup with drift detection and non-destructive apply.
 
 <Steps>
   <Step title="Initialize the manifest">
@@ -24,7 +24,7 @@ Gandalf's team manifest lets you declare a shared AI agent environment as code. 
     version = "1.0"
     name = "my-team-project"
     description = "Standardized AI agent environment"
-    agents = ["claude-code", "codex"]
+    agents = ["claude-code", "codex", "cursor"]
     
     [mcp_servers.postgres-db]
     command = "npx"
@@ -51,6 +51,7 @@ Gandalf's team manifest lets you declare a shared AI agent environment as code. 
     ```bash
     gandalf check
     gandalf check --ci
+    gandalf check --project-only --ci
     ```
 
     Output lists missing MCP servers, skills, or hooks per agent, with target file paths.
@@ -61,6 +62,7 @@ Gandalf's team manifest lets you declare a shared AI agent environment as code. 
     ```bash
     gandalf apply --dry-run
     gandalf apply --yes
+    gandalf apply --project-only --yes
     ```
 
     On success, Gandalf prints the safety snapshot name so you can roll back:

@@ -1,10 +1,10 @@
 ---
 title: "Gandalf: local control console for AI agent setup"
 sidebarTitle: "Introduction"
-description: "Gandalf lets you inspect, review, and roll back local AI agent setup for Codex and Claude Code with snapshots, diffs, and reviewed writes."
+description: "Gandalf lets you inspect, review, and roll back local AI agent setup for Codex, Claude Code, and Cursor with snapshots, diffs, and reviewed writes."
 ---
 
-Gandalf is a local, TUI-first control console for user-global AI agent setup across Codex and Claude Code. It inspects installed skills, hooks, MCP servers, and plugins, browses agent-native marketplace and source entries, and applies only reviewed, provider-backed changes with content-backed snapshots for safe rollback.
+Gandalf is a local, TUI-first control console for AI agent setup across Codex, Claude Code, and Cursor. It inspects installed skills, hooks, MCP servers, and plugins, browses agent-native marketplace and source entries, and applies only reviewed, provider-backed changes with content-backed snapshots for safe rollback.
 
 <CardGroup cols={2}>
   <Card title="Quickstart" icon="rocket" href="/quickstart">
@@ -26,7 +26,7 @@ Gandalf is a local, TUI-first control console for user-global AI agent setup acr
 
 ## What Gandalf does
 
-- **Inspects local setup.** Read-only scan of user-global Codex (`~/.codex/`) and Claude Code (`~/.claude/`) skills, hooks, MCP servers, and plugins.
+- **Inspects local setup.** Read-only scan of Codex (`~/.codex/`), Claude Code (`~/.claude/`), and Cursor (`.cursor/` / `~/.cursor/`) skills, hooks, MCP servers, plugins, and Cursor Agent CLI config.
 - **Captures snapshots.** Content-backed or metadata-only saves of your current agent state.
 - **Diffs setup.** Semantic and raw-source changes between any two snapshots (or a snapshot and `current`).
 - **Reviews changes.** Every mutating action shows a preview first; apply requires explicit flags.
@@ -36,13 +36,13 @@ Gandalf is a local, TUI-first control console for user-global AI agent setup acr
 
 ## What Gandalf is not
 
-- Not a sync tool between Codex and Claude Code.
+- Not a sync tool that copies setup between agents.
 - Not a marketplace: it browses agent-native sources but does not certify them.
 - Not a multi-tool skill fan-out: every mutation is scoped, reviewed, and provider-backed.
 
 ## Current support
 
-Gandalf's active scope is **user-global** setup for **Codex** and **Claude Code**. Project-local files (`.mcp.json`, project `AGENTS.md`, `.env`) are out of scope. See the [support matrix](/reference/support-matrix) for details.
+Gandalf's active agent set is **Codex**, **Claude Code**, and **Cursor**. Discovery covers user-global and agent-native project files. `gandalf check --project-only` / `gandalf apply --project-only` reconcile repository MCP files (`.mcp.json`, `.cursor/mcp.json`, `.codex/config.toml`). Generic project `.env` is not a managed secret store. See the [support matrix](/reference/support-matrix) for details.
 
 ## Trust contract
 

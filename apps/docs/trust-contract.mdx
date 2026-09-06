@@ -8,7 +8,7 @@ The trust contract is the safety boundary Gandalf enforces across scan, snapshot
 
 ## What Gandalf does by default
 
-- Reads local user-global agent configuration only.
+- Reads local agent configuration (user-global and agent-native project files).
 - Does not execute MCP server commands, hooks, scripts, plugins, or agent tools discovered during a scan.
 - Does not use the network unless `GANDALF_UPDATE_CHECK=1` is set.
 - Writes only to `~/.gandalf` (or `$GANDALF_STORE`) for saves.

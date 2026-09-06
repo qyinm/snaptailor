@@ -33,7 +33,7 @@ func Validate(m *Manifest, projectRoot string) []ValidationError {
 		errors = append(errors, ValidationError{
 			Field:   "agents",
 			Problem: "No target agents specified",
-			Fix:     "Specify 'agents = [\"claude-code\", \"codex\"]'",
+			Fix:     fmt.Sprintf("Specify agents from the supported set: %s", strings.Join(agents.CurrentSupportedNames(), ", ")),
 		})
 	} else {
 		for _, agent := range m.Agents {
@@ -41,7 +41,7 @@ func Validate(m *Manifest, projectRoot string) []ValidationError {
 				errors = append(errors, ValidationError{
 					Field:   "agents",
 					Problem: fmt.Sprintf("Agent '%s' is not in the currently supported agent set (supported: %s)", agent, strings.Join(agents.CurrentSupportedNames(), ", ")),
-					Fix:     "Use supported agent IDs: 'claude-code' or 'codex'",
+					Fix:     fmt.Sprintf("Use supported agent IDs: %s", strings.Join(agents.CurrentSupportedNames(), ", ")),
 				})
 			}
 		}

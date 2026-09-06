@@ -4,7 +4,7 @@ sidebarTitle: "init"
 description: "Create a starter gandalf.toml and .gandalf/skills/ in your repository, optionally scaffolded from your current local agent setup, to enable team sync."
 ---
 
-`gandalf init` scaffolds a team agent manifest at your project root. It writes a starter `gandalf.toml` and a `.gandalf/skills/` directory so teammates can standardize MCP servers, skills, and hooks across Codex and Claude Code.
+`gandalf init` scaffolds a team agent manifest at your project root. It writes a starter `gandalf.toml` and a `.gandalf/skills/` directory so teammates can standardize MCP servers, skills, and hooks across Codex, Claude Code, and Cursor.
 
 ## Synopsis
 
@@ -40,7 +40,7 @@ The default template includes an MCP server, skills scaffold, a hook, and an env
 version = "1.0"
 name = "my-team-project"
 description = "Standardized AI agent environment for my-team-project"
-agents = ["claude-code", "codex"]
+agents = ["claude-code", "codex", "cursor"]
 
 [mcp_servers.postgres-db]
 command = "npx"
